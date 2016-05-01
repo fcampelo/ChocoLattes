@@ -9,6 +9,8 @@ R Markdown script to extract publications (journal papers, conference papers, an
 
 2) Edit the _lattes_XML2html.Rmd_ file with your name and affiliation.
 
+![rmd file](fig2.png)
+
 3) Knit to html:
 
 ```
