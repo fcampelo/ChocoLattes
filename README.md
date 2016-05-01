@@ -3,13 +3,13 @@ R Markdown script to extract publications (journal papers, conference papers, an
 
 ## How to use:
 
-1. Download your Lattes CV in XML format (top right of the Lattes CV page). Save it in your working folder as "curriculo.xml"
+1) Download your Lattes CV in XML format (top right of the Lattes CV page). Save it in your working folder as "curriculo.xml"
 
 ![cv lattes](fig1.png)
 
-2. Edit the _lattes_XML2html.Rmd_ file with your name and affiliation.
+2) Edit the _lattes_XML2html.Rmd_ file with your name and affiliation.
 
-3. knit to html:
+3) Knit to html:
 
 ```
 # install.packages("rmarkdown")
