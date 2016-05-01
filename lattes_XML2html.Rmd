@@ -239,7 +239,7 @@ for (i in 1:nrow(MyConfs)){
 
 <div style="background-color:#eeeeee; width:600px">
 Last updated: `r Sys.Date()`<br/>
-Generated with _Lattes XML to HTML_ by [Felipe Campelo](mailto:fcampelo@ufmg.br)<br/>
+Generated with [Lattes XML to HTML](https://github.com/fcampelo/Lattes-XML-to-HTML) by [Felipe Campelo](mailto:fcampelo@ufmg.br)<br/>
 ORCS Lab - Operational Research and Complex Systems Laboratory<br/>
 Department of Electrical Engineering, Universidade Federal de Minas Gerais<br/>
 Belo Horizonte, Brazil</i>
