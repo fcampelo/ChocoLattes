@@ -17,5 +17,5 @@ rmarkdown::render(input = "lattes_XML2html.Rmd", output_file = "teste.html")
 ```
 
 That's all!  
-Cheers,
+Cheers,  
 Felipe
