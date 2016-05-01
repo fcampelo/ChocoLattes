@@ -12,6 +12,7 @@ R Markdown script to extract publications (journal papers, conference papers, an
 3. knit to html:
 
 ```
+# install.packages("rmarkdown")
 library(rmarkdown)
 rmarkdown::render(input = "lattes_XML2html.Rmd", output_file = "teste.html")
 ```
