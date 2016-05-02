@@ -179,7 +179,7 @@ if (npap){
 # Sort: most recent first
 MyPapers <- MyPapers[order(MyPapers$Year, decreasing = TRUE), ]
 MyConfs  <- MyConfs[order(MyConfs$Year, decreasing = TRUE), ]
-MyChaps  <- MyConfs[order(MyConfs$Year, decreasing = TRUE), ]
+MyChaps  <- MyChaps[order(MyChaps$Year, decreasing = TRUE), ]
 
 ```
 
