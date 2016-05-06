@@ -9,7 +9,7 @@ output: html_document
 # R script by Felipe Campelo (fcampelo@ufmg.br)
 
 # Your XML files. Multiple files allowed.
-myLattes  <- "angueth.xml" #c("curriculo.xml", "curriculo2.xml", "curriculo3.xml")
+myLattes  <- c("curriculo.xml", "curriculo2.xml", "curriculo3.xml")
 
 # Load required packages and functions
 source("utils.R")
@@ -19,216 +19,220 @@ Mypubs        <- vector("list", 5)
 names(Mypubs) <- c("Accepted", "Papers", "Confs", "Chaps", "Books")
 
 for (lattes.indx in seq_along(myLattes)){
-	# Read XML to a list object
-	doc <- XML::xmlToList(XML::xmlTreeParse(myLattes[lattes.indx], 
-																					useInternal = TRUE, 
-																					encoding    = "latin"))
-	
-	# Get published journal papers
-	npap     <- length(doc$`PRODUCAO-BIBLIOGRAFICA`$`ARTIGOS-PUBLICADOS`)
-	MyPapers <- data.frame(Authors = character(npap),
-												 Title   = character(npap),
-												 Journal = character(npap),
-												 Volume  = character(npap),
-												 Issue   = character(npap),
-												 Pages   = character(npap),
-												 Year    = character(npap),
-												 DOI     = character(npap),
-												 stringsAsFactors = FALSE)
-	
-	# Probably more effective if I used lapply, but more didactic with a for loop
-	if (npap){
-		for (i in 1:npap){
-			paper <- doc$`PRODUCAO-BIBLIOGRAFICA`$`ARTIGOS-PUBLICADOS`[[i]]
-			MyPapers$Title[i]   <- paper$`DADOS-BASICOS-DO-ARTIGO`[[2]]
-			MyPapers$Journal[i] <- paper$`DETALHAMENTO-DO-ARTIGO`[[1]]
-			MyPapers$Volume[i]  <- paper$`DETALHAMENTO-DO-ARTIGO`[[3]]
-			MyPapers$Issue[i]   <- ifelse(paper$`DETALHAMENTO-DO-ARTIGO`[[5]] == "", 
-																		yes = "1",
-																		no  = paper$`DETALHAMENTO-DO-ARTIGO`[[5]])
-			MyPapers$Pages[i]   <- paste0(paper$`DETALHAMENTO-DO-ARTIGO`[[6]],
-																		"-",
-																		paper$`DETALHAMENTO-DO-ARTIGO`[[7]])
-			MyPapers$Year[i]    <- paper$`DADOS-BASICOS-DO-ARTIGO`[[3]]
-			MyPapers$DOI[i]     <- ifelse(paper$`DADOS-BASICOS-DO-ARTIGO`[[9]] == "",
-																		paste0("NotAvailable no.", i),
-																		paper$`DADOS-BASICOS-DO-ARTIGO`[[9]])
-			authindx            <- which(names(paper) == "AUTORES")
-			nauthors            <- length(authindx)
-			MyPapers$Authors[i] <- .authorname(paper[[authindx[1]]][1])
-			if (nauthors > 1){
-				for (j in 2:nauthors){
-					MyPapers$Authors[i] <- paste0(MyPapers$Authors[i], 
-																				", ",
-																				.authorname(paper[[authindx[j]]][1]))
-				}
-			}
-		}
-	}
-	
-	# ==========================================
-	
-	# Get accepted journal papers
-	npap     <- length(doc$`PRODUCAO-BIBLIOGRAFICA`$`ARTIGOS-ACEITOS-PARA-PUBLICACAO`)
-	MyAccept <- data.frame(Authors = character(npap),
-												 Title   = character(npap),
-												 Journal = character(npap),
-												 Year    = character(npap),
-												 stringsAsFactors = FALSE)
-	if (npap){
-		for (i in 1:npap){
-			paper <- doc$`PRODUCAO-BIBLIOGRAFICA`$`ARTIGOS-ACEITOS-PARA-PUBLICACAO`[[i]]
-			MyAccept$Title[i]   <- paper$`DADOS-BASICOS-DO-ARTIGO`[[2]]
-			MyAccept$Journal[i] <- paper$`DETALHAMENTO-DO-ARTIGO`[[1]]
-			MyAccept$Year[i]    <- paper$`DADOS-BASICOS-DO-ARTIGO`[[3]]
-			authindx            <- which(names(paper) == "AUTORES")
-			nauthors            <- length(authindx)
-			MyAccept$Authors[i] <- .authorname(paper[[authindx[1]]][1])
-			if (nauthors > 1){
-				for (j in 2:nauthors){
-					MyAccept$Authors[i] <- paste0(MyAccept$Authors[i], 
-																				", ",
-																				.authorname(paper[[authindx[j]]][1]))
-				}
-			}
-		}
-	}
-	
-	# ==========================================
-	
-	# Get conference papers
-	npap    <- length(doc$`PRODUCAO-BIBLIOGRAFICA`$`TRABALHOS-EM-EVENTOS`)
-	MyConfs <- data.frame(Authors    = character(npap),
-												Title      = character(npap),
-												Conference = character(npap),
-												Country    = character(npap),
-												DOI        = character(npap),
-												Pages      = character(npap),
-												Year       = character(npap),
-												stringsAsFactors = FALSE)
-	
-	if (npap){
-		for (i in 1:npap){
-			paper <- doc$`PRODUCAO-BIBLIOGRAFICA`$`TRABALHOS-EM-EVENTOS`[[i]]
-			MyConfs$Title[i]      <- paper$`DADOS-BASICOS-DO-TRABALHO`[[2]]
-			MyConfs$Conference[i] <- paper$`DETALHAMENTO-DO-TRABALHO`[[2]]
-			MyConfs$Country[i]    <- paper$`DADOS-BASICOS-DO-TRABALHO`[[4]]
-			MyConfs$Year[i]       <- max(paper$`DETALHAMENTO-DO-TRABALHO`[[4]],
-																	 paper$`DADOS-BASICOS-DO-TRABALHO`[[3]])
-			MyConfs$Pages[i]      <- paste0(paper$`DETALHAMENTO-DO-TRABALHO`[[9]],
-																			"-",
-																			paper$`DETALHAMENTO-DO-TRABALHO`[[10]])
-			MyConfs$DOI[i]        <- ifelse(paper$`DADOS-BASICOS-DO-TRABALHO`[[9]] == "",
-																			paste0("NotAvailable no.", i),
-																			paper$`DADOS-BASICOS-DO-TRABALHO`[[9]])
-			authindx              <- which(names(paper) == "AUTORES")
-			nauthors              <- length(authindx)
-			MyConfs$Authors[i]    <- .authorname(paper[[authindx[1]]][1])
-			if (nauthors > 1){
-				for (j in 2:nauthors){
-					MyConfs$Authors[i] <- paste0(MyConfs$Authors[i], 
-																			 ", ",
-																			 .authorname(paper[[authindx[j]]][1]))
-				}
-			}
-		}
-	}
-	
-	# ==========================================
-	
-	# Get book chapters
-	npap    <- length(doc$`PRODUCAO-BIBLIOGRAFICA`$`LIVROS-E-CAPITULOS`$`CAPITULOS-DE-LIVROS-PUBLICADOS`)
-	MyChaps <- data.frame(Authors  = character(npap),
-												Title    = character(npap),
-												Bookname = character(npap),
-												Volume   = character(npap),
-												Pages    = character(npap),
-												Year     = character(npap),
-												DOI      = character(npap),
-												stringsAsFactors = FALSE)
-	
-	if (npap){
-		for (i in 1:npap){
-			paper <- doc$`PRODUCAO-BIBLIOGRAFICA`$`LIVROS-E-CAPITULOS`$`CAPITULOS-DE-LIVROS-PUBLICADOS`[[i]]
-			MyChaps$Title[i]    <- paper$`DADOS-BASICOS-DO-CAPITULO`[[2]]
-			MyChaps$Bookname[i] <- paper$`DETALHAMENTO-DO-CAPITULO`[[1]]
-			MyChaps$Volume[i]   <- paper$`DETALHAMENTO-DO-CAPITULO`[[2]]
-			MyChaps$Year[i]     <- paper$`DADOS-BASICOS-DO-CAPITULO`[[3]]
-			MyChaps$Pages[i]    <- paste0(paper$`DETALHAMENTO-DO-CAPITULO`[[3]],
-																		"-",
-																		paper$`DETALHAMENTO-DO-CAPITULO`[[4]])
-			MyChaps$DOI[i]      <- ifelse(paper$`DADOS-BASICOS-DO-CAPITULO`[[9]] == "",
-																		paste0("NotAvailable no.", i),
-																		paper$`DADOS-BASICOS-DO-CAPITULO`[[9]])
-			authindx            <- which(names(paper) == "AUTORES")
-			nauthors            <- length(authindx)
-			MyChaps$Authors[i]  <- .authorname(paper[[authindx[1]]][1])
-			if (nauthors > 1){
-				for (j in 2:nauthors){
-					MyChaps$Authors[i] <- paste0(MyChaps$Authors[i], 
-																			 ", ",
-																			 .authorname(paper[[authindx[j]]][1]))
-				}
-			}
-		}
-	}
-	
-	# ==========================================
-	
-	# Get books
-	npap    <- length(doc$`PRODUCAO-BIBLIOGRAFICA`$`LIVROS-E-CAPITULOS`$`LIVROS-PUBLICADOS-OU-ORGANIZADOS`)
-	MyBooks <- data.frame(Authors   = character(npap),
-												Bookname  = character(npap),
-												Publisher = character(npap),
-												Edition   = character(npap),
-												City      = character(npap),
-												Pages     = character(npap),
-												Year      = character(npap),
-												ISBN      = character(npap),
-												stringsAsFactors = FALSE)
-	
-	if (npap){
-		for (i in 1:npap){
-			paper <- doc$`PRODUCAO-BIBLIOGRAFICA`$`LIVROS-E-CAPITULOS`$`LIVROS-PUBLICADOS-OU-ORGANIZADOS`[[i]]
-			MyBooks$Bookname[i]  <- paper$`DADOS-BASICOS-DO-LIVRO`[[3]]
-			MyBooks$Publisher[i] <- paper$`DETALHAMENTO-DO-LIVRO`[[7]]
-			MyBooks$Edition[i]   <- paper$`DETALHAMENTO-DO-LIVRO`[[4]]
-			MyBooks$City[i]      <- paste0(paper$`DETALHAMENTO-DO-LIVRO`[[6]],
-																		 ", ", 
-																		 paper$`DADOS-BASICOS-DO-LIVRO`[[5]])
-			MyBooks$Pages[i]     <- paper$`DETALHAMENTO-DO-LIVRO`[[2]]
-			MyBooks$Year[i]      <- paper$`DADOS-BASICOS-DO-LIVRO`[[4]]
-			MyBooks$ISBN[i]      <- ifelse(paper$`DETALHAMENTO-DO-LIVRO`[[3]] == "",
-																		 paste0("NotAvailable no.", i),
-																		 paper$`DETALHAMENTO-DO-LIVRO`[[3]])
-			authindx            <- which(names(paper) == "AUTORES")
-			nauthors            <- length(authindx)
-			MyBooks$Authors[i]  <- .authorname(paper[[authindx[1]]][1])
-			if (nauthors > 1){
-				for (j in 2:nauthors){
-					MyBooks$Authors[i] <- paste0(MyBooks$Authors[i], 
-																			 ", ",
-																			 .authorname(paper[[authindx[j]]][1]))
-				}
-			}
-		}
-	}
-	
-	# ==========================================
-	
-	if (lattes.indx == 1) {
-		Mypubs[[1]]   <- MyAccept
-		Mypubs[[2]]   <- MyPapers
-		Mypubs[[3]]   <- MyConfs
-		Mypubs[[4]]   <- MyChaps
-		Mypubs[[5]]   <- MyBooks
-	} else {
-		Mypubs[[1]]   <- rbind(Mypubs[[1]], MyAccept)
-		Mypubs[[2]]   <- rbind(Mypubs[[2]], MyPapers)
-		Mypubs[[3]]   <- rbind(Mypubs[[3]], MyConfs)
-		Mypubs[[4]]   <- rbind(Mypubs[[4]], MyChaps)
-		Mypubs[[5]]   <- rbind(Mypubs[[5]], MyBooks)
-	}
+    # Read XML to a list object
+    doc <- XML::xmlToList(XML::xmlTreeParse(myLattes[lattes.indx], 
+                                            useInternal = TRUE, 
+                                            encoding    = "latin"))
+    
+    # Get published journal papers
+    npap     <- length(doc$`PRODUCAO-BIBLIOGRAFICA`$`ARTIGOS-PUBLICADOS`)
+    MyPapers <- data.frame(Authors = character(npap),
+                           Title   = character(npap),
+                           Journal = character(npap),
+                           Volume  = character(npap),
+                           Issue   = character(npap),
+                           Pages   = character(npap),
+                           Year    = character(npap),
+                           DOI     = character(npap),
+                           stringsAsFactors = FALSE)
+    
+    # Probably more effective if I used lapply, but more didactic with a for loop
+    if (npap){
+        for (i in 1:npap){
+            paper <- doc$`PRODUCAO-BIBLIOGRAFICA`$`ARTIGOS-PUBLICADOS`[[i]]
+            MyPapers$Title[i]   <- paper$`DADOS-BASICOS-DO-ARTIGO`[[2]]
+            MyPapers$Journal[i] <- paper$`DETALHAMENTO-DO-ARTIGO`[[1]]
+            MyPapers$Volume[i]  <- paper$`DETALHAMENTO-DO-ARTIGO`[[3]]
+            MyPapers$Issue[i]   <- ifelse(paper$`DETALHAMENTO-DO-ARTIGO`[[5]] == "", 
+                                          yes = "1",
+                                          no  = paper$`DETALHAMENTO-DO-ARTIGO`[[5]])
+            MyPapers$Pages[i]   <- paste0(paper$`DETALHAMENTO-DO-ARTIGO`[[6]],
+                                          "-",
+                                          paper$`DETALHAMENTO-DO-ARTIGO`[[7]])
+            MyPapers$Year[i]    <- paper$`DADOS-BASICOS-DO-ARTIGO`[[3]]
+            MyPapers$DOI[i]     <- ifelse(paper$`DADOS-BASICOS-DO-ARTIGO`[[9]] == "",
+                                          paste0("zNotAvailable no.", i),
+                                          paper$`DADOS-BASICOS-DO-ARTIGO`[[9]])
+            authindx            <- which(names(paper) == "AUTORES")
+            nauthors            <- length(authindx)
+            MyPapers$Authors[i] <- .authorname(paper[[authindx[1]]][1])
+            if (nauthors > 1){
+                for (j in 2:nauthors){
+                    MyPapers$Authors[i] <- paste0(MyPapers$Authors[i], 
+                                                  ", ",
+                                                  .authorname(paper[[authindx[j]]][1]))
+                }
+            }
+        }
+    }
+    
+    # ==========================================
+    
+    # Get accepted journal papers
+    npap     <- length(doc$`PRODUCAO-BIBLIOGRAFICA`$`ARTIGOS-ACEITOS-PARA-PUBLICACAO`)
+    MyAccept <- data.frame(Authors = character(npap),
+                           Title   = character(npap),
+                           Journal = character(npap),
+                           DOI     = character(npap),
+                           Year    = character(npap),
+                           stringsAsFactors = FALSE)
+    if (npap){
+        for (i in 1:npap){
+            paper <- doc$`PRODUCAO-BIBLIOGRAFICA`$`ARTIGOS-ACEITOS-PARA-PUBLICACAO`[[i]]
+            MyAccept$Title[i]   <- paper$`DADOS-BASICOS-DO-ARTIGO`[[2]]
+            MyAccept$Journal[i] <- paper$`DETALHAMENTO-DO-ARTIGO`[[1]]
+            MyAccept$DOI[i]     <- ifelse(paper$`DADOS-BASICOS-DO-ARTIGO`[[9]] == "",
+                                          paste0("zNotAvailable no.", i),
+                                          paper$`DADOS-BASICOS-DO-ARTIGO`[[9]])
+            MyAccept$Year[i]    <- paper$`DADOS-BASICOS-DO-ARTIGO`[[3]]
+            authindx            <- which(names(paper) == "AUTORES")
+            nauthors            <- length(authindx)
+            MyAccept$Authors[i] <- .authorname(paper[[authindx[1]]][1])
+            if (nauthors > 1){
+                for (j in 2:nauthors){
+                    MyAccept$Authors[i] <- paste0(MyAccept$Authors[i], 
+                                                  ", ",
+                                                  .authorname(paper[[authindx[j]]][1]))
+                }
+            }
+        }
+    }
+    
+    # ==========================================
+    
+    # Get conference papers
+    npap    <- length(doc$`PRODUCAO-BIBLIOGRAFICA`$`TRABALHOS-EM-EVENTOS`)
+    MyConfs <- data.frame(Authors    = character(npap),
+                          Title      = character(npap),
+                          Conference = character(npap),
+                          Country    = character(npap),
+                          DOI        = character(npap),
+                          Pages      = character(npap),
+                          Year       = character(npap),
+                          stringsAsFactors = FALSE)
+    
+    if (npap){
+        for (i in 1:npap){
+            paper <- doc$`PRODUCAO-BIBLIOGRAFICA`$`TRABALHOS-EM-EVENTOS`[[i]]
+            MyConfs$Title[i]      <- paper$`DADOS-BASICOS-DO-TRABALHO`[[2]]
+            MyConfs$Conference[i] <- paper$`DETALHAMENTO-DO-TRABALHO`[[2]]
+            MyConfs$Country[i]    <- paper$`DADOS-BASICOS-DO-TRABALHO`[[4]]
+            MyConfs$Year[i]       <- max(paper$`DETALHAMENTO-DO-TRABALHO`[[4]],
+                                         paper$`DADOS-BASICOS-DO-TRABALHO`[[3]])
+            MyConfs$Pages[i]      <- paste0(paper$`DETALHAMENTO-DO-TRABALHO`[[9]],
+                                            "-",
+                                            paper$`DETALHAMENTO-DO-TRABALHO`[[10]])
+            MyConfs$DOI[i]        <- ifelse(paper$`DADOS-BASICOS-DO-TRABALHO`[[9]] == "",
+                                            paste0("zNotAvailable no.", i),
+                                            paper$`DADOS-BASICOS-DO-TRABALHO`[[9]])
+            authindx              <- which(names(paper) == "AUTORES")
+            nauthors              <- length(authindx)
+            MyConfs$Authors[i]    <- .authorname(paper[[authindx[1]]][1])
+            if (nauthors > 1){
+                for (j in 2:nauthors){
+                    MyConfs$Authors[i] <- paste0(MyConfs$Authors[i], 
+                                                 ", ",
+                                                 .authorname(paper[[authindx[j]]][1]))
+                }
+            }
+        }
+    }
+    
+    # ==========================================
+    
+    # Get book chapters
+    npap    <- length(doc$`PRODUCAO-BIBLIOGRAFICA`$`LIVROS-E-CAPITULOS`$`CAPITULOS-DE-LIVROS-PUBLICADOS`)
+    MyChaps <- data.frame(Authors  = character(npap),
+                          Title    = character(npap),
+                          Bookname = character(npap),
+                          Volume   = character(npap),
+                          Pages    = character(npap),
+                          Year     = character(npap),
+                          DOI      = character(npap),
+                          stringsAsFactors = FALSE)
+    
+    if (npap){
+        for (i in 1:npap){
+            paper <- doc$`PRODUCAO-BIBLIOGRAFICA`$`LIVROS-E-CAPITULOS`$`CAPITULOS-DE-LIVROS-PUBLICADOS`[[i]]
+            MyChaps$Title[i]    <- paper$`DADOS-BASICOS-DO-CAPITULO`[[2]]
+            MyChaps$Bookname[i] <- paper$`DETALHAMENTO-DO-CAPITULO`[[1]]
+            MyChaps$Volume[i]   <- paper$`DETALHAMENTO-DO-CAPITULO`[[2]]
+            MyChaps$Year[i]     <- paper$`DADOS-BASICOS-DO-CAPITULO`[[3]]
+            MyChaps$Pages[i]    <- paste0(paper$`DETALHAMENTO-DO-CAPITULO`[[3]],
+                                          "-",
+                                          paper$`DETALHAMENTO-DO-CAPITULO`[[4]])
+            MyChaps$DOI[i]      <- ifelse(paper$`DADOS-BASICOS-DO-CAPITULO`[[9]] == "",
+                                          paste0("zNotAvailable no.", i),
+                                          paper$`DADOS-BASICOS-DO-CAPITULO`[[9]])
+            authindx            <- which(names(paper) == "AUTORES")
+            nauthors            <- length(authindx)
+            MyChaps$Authors[i]  <- .authorname(paper[[authindx[1]]][1])
+            if (nauthors > 1){
+                for (j in 2:nauthors){
+                    MyChaps$Authors[i] <- paste0(MyChaps$Authors[i], 
+                                                 ", ",
+                                                 .authorname(paper[[authindx[j]]][1]))
+                }
+            }
+        }
+    }
+    
+    # ==========================================
+    
+    # Get books
+    npap    <- length(doc$`PRODUCAO-BIBLIOGRAFICA`$`LIVROS-E-CAPITULOS`$`LIVROS-PUBLICADOS-OU-ORGANIZADOS`)
+    MyBooks <- data.frame(Authors   = character(npap),
+                          Bookname  = character(npap),
+                          Publisher = character(npap),
+                          Edition   = character(npap),
+                          City      = character(npap),
+                          Pages     = character(npap),
+                          Year      = character(npap),
+                          ISBN      = character(npap),
+                          stringsAsFactors = FALSE)
+    
+    if (npap){
+        for (i in 1:npap){
+            paper <- doc$`PRODUCAO-BIBLIOGRAFICA`$`LIVROS-E-CAPITULOS`$`LIVROS-PUBLICADOS-OU-ORGANIZADOS`[[i]]
+            MyBooks$Bookname[i]  <- paper$`DADOS-BASICOS-DO-LIVRO`[[3]]
+            MyBooks$Publisher[i] <- paper$`DETALHAMENTO-DO-LIVRO`[[7]]
+            MyBooks$Edition[i]   <- paper$`DETALHAMENTO-DO-LIVRO`[[4]]
+            MyBooks$City[i]      <- paste0(paper$`DETALHAMENTO-DO-LIVRO`[[6]],
+                                           ", ", 
+                                           paper$`DADOS-BASICOS-DO-LIVRO`[[5]])
+            MyBooks$Pages[i]     <- paper$`DETALHAMENTO-DO-LIVRO`[[2]]
+            MyBooks$Year[i]      <- paper$`DADOS-BASICOS-DO-LIVRO`[[4]]
+            MyBooks$ISBN[i]      <- ifelse(paper$`DETALHAMENTO-DO-LIVRO`[[3]] == "",
+                                           paste0("zNotAvailable no.", i),
+                                           paper$`DETALHAMENTO-DO-LIVRO`[[3]])
+            authindx            <- which(names(paper) == "AUTORES")
+            nauthors            <- length(authindx)
+            MyBooks$Authors[i]  <- .authorname(paper[[authindx[1]]][1])
+            if (nauthors > 1){
+                for (j in 2:nauthors){
+                    MyBooks$Authors[i] <- paste0(MyBooks$Authors[i], 
+                                                 ", ",
+                                                 .authorname(paper[[authindx[j]]][1]))
+                }
+            }
+        }
+    }
+    
+    # ==========================================
+    
+    if (lattes.indx == 1) {
+        Mypubs[[1]]   <- MyAccept
+        Mypubs[[2]]   <- MyPapers
+        Mypubs[[3]]   <- MyConfs
+        Mypubs[[4]]   <- MyChaps
+        Mypubs[[5]]   <- MyBooks
+    } else {
+        Mypubs[[1]]   <- rbind(Mypubs[[1]], MyAccept)
+        Mypubs[[2]]   <- rbind(Mypubs[[2]], MyPapers)
+        Mypubs[[3]]   <- rbind(Mypubs[[3]], MyConfs)
+        Mypubs[[4]]   <- rbind(Mypubs[[4]], MyChaps)
+        Mypubs[[5]]   <- rbind(Mypubs[[5]], MyBooks)
+    }
 }
 
 # Sort: most recent first
@@ -240,165 +244,38 @@ Mypubs <- lapply(Mypubs, FUN = .authorCap)
 # Remove duplicated works (by DOI, ISSN or Title - this is a G.I.G.O. function)
 Mypubs <- lapply(Mypubs, FUN = .removeduplicates)
 
+MYears <- lapply(Mypubs, FUN = function(x){unique(x$Year)})
+Myears <- sort(unique(unlist(MYears)), decreasing = TRUE)
+
 ```
 
 ```{r, results='asis',echo=FALSE}
-# # Books
-# npap <- nrow(Mypubs[[5]])
-# if(npap){
-# 	cat("## Books\n")
-# 	myears <- unique(Mypubs[[5]]$Year)
-# 	for (year in myears){
-# 		cat("###", year, "\n")
-# 		mydf <- subset(Mypubs[[5]], Year == year)
-# 		for (i in 1:nrow(mydf)){
-# 			cat(i, ". ",
-# 					mydf$Authors[i],
-# 					": **", mydf$Bookname[i], "**. ",
-# 					mydf$Publisher[i], ", ", 
-# 					"Vol. "
-# 						
-# 					}
-# 			if(length(grep("[0-9]+-[0-9]+$", mydf$Pages[i]))){
-# 				cat(". pp. ", mydf$Pages[i], 
-# 						sep = "")
-# 			}
-# 			cat(", ", mydf$Year[i], 
-# 					sep = "")
-# 			if(mydf$DOI[i] != ""){
-# 				cat(".<br/>[[DOI: ",
-# 						mydf$DOI[i],
-# 						"](http://dx.doi.org/",
-# 						mydf$DOI[i], ")]",
-# 						sep = "")
-# 			}
-# 			cat("\n\n<hr>",
-# 					sep = "")
-# 		}
-# 	}
-# }
+cat('<a name="pagetop"></a>\n\n**Quick links:**&nbsp;&nbsp;&nbsp;', 
+    sep = "")
+for(i in 1:(length(Myears) - 1)){
+    cat("[", Myears[i], "](#", 
+        Myears[i], ") | ",
+        sep = "")
+}
+cat("[", Myears[length(Myears)], "](#", 
+    Myears[i], ")\n\n\n",
+    sep = "")
 
-
-# Accepted papers
-npap <- nrow(Mypubs[[1]])
-if(npap){
-	cat("## Papers Accepted for Publication\n")
-	for (i in 1:npap){
-		cat(i, ". ",
-				Mypubs[[1]]$Authors[i], ": _",
-				Mypubs[[1]]$Title[i], "._ ",
-				Mypubs[[1]]$Journal[i], ", ",
-				Mypubs[[1]]$Year[i], 
-				"\n\n<hr>",
-				sep = "")
-	}
+for (year in Myears){
+    tmplist <- lapply(Mypubs, FUN = .selectyear, year = year)
+    cat('<a name="', year, '"></a>\n\n',
+        '## ', year, '\n',
+        sep = "")
+    
+    # Print that year's works to markdown and HTML
+    .printBooks(tmplist[[5]])
+    .printAccepted(tmplist[[1]])
+    .printPapers(tmplist[[2]])
+    .printConfs(tmplist[[3]])
+    .printChaps(tmplist[[4]])
+    cat('<p align="right">[Back to top](#pagetop)</p>')
 }
 
-# Journal papers
-npap <- nrow(Mypubs[[2]])
-if(npap){
-	cat("## Journal Papers\n")
-	myears <- unique(Mypubs[[2]]$Year)
-	for (year in myears){
-		cat("###", year, "\n")
-		mydf <- subset(Mypubs[[2]], Year == year)
-		for (i in 1:nrow(mydf)){
-			cat(i, ". ",
-					mydf$Authors[i],
-					": _", mydf$Title[i], "._ ",
-					mydf$Journal[i], " ",
-					mydf$Volume[i], 
-					"(", mydf$Issue[i], ")",
-					sep = "")
-			if(length(grep("[0-9]+-[0-9]+$", mydf$Pages[i]))){
-				cat(":", mydf$Pages[i], 
-						sep = "")
-			}
-			cat(", ", mydf$Year[i], 
-					sep = "")
-			if(mydf$DOI[i] != ""){
-				cat(".<br/>[[DOI: ",
-						mydf$DOI[i],
-						"](http://dx.doi.org/",
-						mydf$DOI[i], ")]",
-						sep = "")
-			}
-			cat("\n\n<hr>",
-					sep = "")
-		}
-	}
-}
-
-
-# Conference papers
-npap <- nrow(Mypubs[[3]])
-if(npap){
-	cat("## Conference Proceedings\n")
-	myears <- unique(Mypubs[[3]]$Year)
-	for (year in myears){
-		cat("###", year, "\n")
-		mydf <- subset(Mypubs[[3]], Year == year)
-		for (i in 1:nrow(mydf)){
-			cat(i, ". ",
-					mydf$Authors[i],
-					": _", mydf$Title[i], "._ ",
-					mydf$Conference[i], ", ",
-					sep = "")
-			if(length(grep("[0-9]+-[0-9]+$", mydf$Pages[i]))){
-				cat("pp. ", mydf$Pages[i], 
-						sep = "")
-			}
-			cat(", ", mydf$Year[i], 
-					sep = "")
-			if(mydf$DOI[i] != ""){
-				cat(".<br/>[[DOI: ",
-						mydf$DOI[i],
-						"](http://dx.doi.org/",
-						mydf$DOI[i], ")]",
-						sep = "")
-			}
-			cat("\n\n<hr>",
-					sep = "")
-		}
-	}
-}
-
-
-# Book chapters
-npap <- nrow(Mypubs[[4]])
-if(npap){
-	cat("## Book Chapters\n")
-	myears <- unique(Mypubs[[4]]$Year)
-	for (year in myears){
-		cat("###", year, "\n")
-		mydf <- subset(Mypubs[[4]], Year == year)
-		for (i in 1:nrow(mydf)){
-			cat(i, ". ",
-					mydf$Authors[i],
-					": _", mydf$Title[i], "._ ",
-					"In: ", mydf$Bookname[i], ", ",
-					"vol. ", ifelse(mydf$Volume == "",
-													"1",
-													mydf$Volume),
-					sep = "")
-			if(length(grep("[0-9]+-[0-9]+$", mydf$Pages[i]))){
-				cat(". pp. ", mydf$Pages[i], 
-						sep = "")
-			}
-			cat(", ", mydf$Year[i], 
-					sep = "")
-			if(mydf$DOI[i] != ""){
-				cat(".<br/>[[DOI: ",
-						mydf$DOI[i],
-						"](http://dx.doi.org/",
-						mydf$DOI[i], ")]",
-						sep = "")
-			}
-			cat("\n\n<hr>",
-					sep = "")
-		}
-	}
-}
 
 ```
 
