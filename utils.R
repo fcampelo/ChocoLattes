@@ -2,7 +2,7 @@
 # by Felipe Campelo (fcampelo@ufmg.br ; http://github.com/fcampelo)
 
 # Load (and, if needed, install) required packages
-required.packages <- c("XML")
+required.packages <- c("XML", "tools")
 install_and_load_packages <- function(pkg){
     if (!(pkg %in% rownames(installed.packages()))){
         install.packages(pkg)

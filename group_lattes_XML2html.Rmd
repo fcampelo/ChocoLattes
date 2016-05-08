@@ -40,7 +40,7 @@ for (lattes.indx in seq_along(myLattes)){
     if (npap){
         for (i in 1:npap){
             paper <- doc$`PRODUCAO-BIBLIOGRAFICA`$`ARTIGOS-PUBLICADOS`[[i]]
-            MyPapers$Title[i]   <- paper$`DADOS-BASICOS-DO-ARTIGO`[[2]]
+            MyPapers$Title[i]   <- tools::toTitleCase(tolower(paper$`DADOS-BASICOS-DO-ARTIGO`[[2]]))
             MyPapers$Journal[i] <- paper$`DETALHAMENTO-DO-ARTIGO`[[1]]
             MyPapers$Volume[i]  <- paper$`DETALHAMENTO-DO-ARTIGO`[[3]]
             MyPapers$Issue[i]   <- ifelse(paper$`DETALHAMENTO-DO-ARTIGO`[[5]] == "", 
@@ -79,7 +79,7 @@ for (lattes.indx in seq_along(myLattes)){
     if (npap){
         for (i in 1:npap){
             paper <- doc$`PRODUCAO-BIBLIOGRAFICA`$`ARTIGOS-ACEITOS-PARA-PUBLICACAO`[[i]]
-            MyAccept$Title[i]   <- paper$`DADOS-BASICOS-DO-ARTIGO`[[2]]
+            MyAccept$Title[i]   <- tools::toTitleCase(tolower(paper$`DADOS-BASICOS-DO-ARTIGO`[[2]]))
             MyAccept$Journal[i] <- paper$`DETALHAMENTO-DO-ARTIGO`[[1]]
             MyAccept$DOI[i]     <- ifelse(paper$`DADOS-BASICOS-DO-ARTIGO`[[9]] == "",
                                           paste0("zNotAvailable no.", i),
@@ -114,7 +114,7 @@ for (lattes.indx in seq_along(myLattes)){
     if (npap){
         for (i in 1:npap){
             paper <- doc$`PRODUCAO-BIBLIOGRAFICA`$`TRABALHOS-EM-EVENTOS`[[i]]
-            MyConfs$Title[i]      <- paper$`DADOS-BASICOS-DO-TRABALHO`[[2]]
+            MyConfs$Title[i]      <- tools::toTitleCase(tolower(paper$`DADOS-BASICOS-DO-TRABALHO`[[2]]))
             MyConfs$Conference[i] <- paper$`DETALHAMENTO-DO-TRABALHO`[[2]]
             MyConfs$Country[i]    <- paper$`DADOS-BASICOS-DO-TRABALHO`[[4]]
             MyConfs$Year[i]       <- max(paper$`DETALHAMENTO-DO-TRABALHO`[[4]],
@@ -154,8 +154,8 @@ for (lattes.indx in seq_along(myLattes)){
     if (npap){
         for (i in 1:npap){
             paper <- doc$`PRODUCAO-BIBLIOGRAFICA`$`LIVROS-E-CAPITULOS`$`CAPITULOS-DE-LIVROS-PUBLICADOS`[[i]]
-            MyChaps$Title[i]    <- paper$`DADOS-BASICOS-DO-CAPITULO`[[2]]
-            MyChaps$Bookname[i] <- paper$`DETALHAMENTO-DO-CAPITULO`[[1]]
+            MyChaps$Title[i]    <- tools::toTitleCase(tolower(paper$`DADOS-BASICOS-DO-CAPITULO`[[2]]))
+            MyChaps$Bookname[i] <- tools::toTitleCase(tolower(paper$`DETALHAMENTO-DO-CAPITULO`[[1]]))
             MyChaps$Volume[i]   <- paper$`DETALHAMENTO-DO-CAPITULO`[[2]]
             MyChaps$Year[i]     <- paper$`DADOS-BASICOS-DO-CAPITULO`[[3]]
             MyChaps$Pages[i]    <- paste0(paper$`DETALHAMENTO-DO-CAPITULO`[[3]],
@@ -194,7 +194,7 @@ for (lattes.indx in seq_along(myLattes)){
     if (npap){
         for (i in 1:npap){
             paper <- doc$`PRODUCAO-BIBLIOGRAFICA`$`LIVROS-E-CAPITULOS`$`LIVROS-PUBLICADOS-OU-ORGANIZADOS`[[i]]
-            MyBooks$Bookname[i]  <- paper$`DADOS-BASICOS-DO-LIVRO`[[3]]
+            MyBooks$Bookname[i]  <- tools::toTitleCase(tolower(paper$`DADOS-BASICOS-DO-LIVRO`[[3]]))
             MyBooks$Publisher[i] <- paper$`DETALHAMENTO-DO-LIVRO`[[7]]
             MyBooks$Edition[i]   <- paper$`DETALHAMENTO-DO-LIVRO`[[4]]
             MyBooks$City[i]      <- paste0(paper$`DETALHAMENTO-DO-LIVRO`[[6]],
