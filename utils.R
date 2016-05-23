@@ -242,7 +242,7 @@ ignore <- lapply(required.packages, install_and_load_packages)
 
 
 # ==========================================
-# Function to extract and format book
+# Function to extract and format book chapters
 .getChaps <- function(x){
     npap    <- length(x$`PRODUCAO-BIBLIOGRAFICA`$`LIVROS-E-CAPITULOS`$`CAPITULOS-DE-LIVROS-PUBLICADOS`)
     MyChaps <- data.frame(Authors  = character(npap),
