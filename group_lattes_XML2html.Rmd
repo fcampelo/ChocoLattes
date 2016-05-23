@@ -2,7 +2,6 @@
 title: "Group Name Here"
 author: "Affiliations here"
 output: html_document
-self_contained: TRUE
 ---
 <hr>
 
@@ -81,10 +80,12 @@ for(i in 1:(length(Myears) - 1)){
         sep = "")
 }
 cat("[", Myears[length(Myears)], "](#", 
-    Myears[i], ")</p>\n\n\n",
+    Myears[i], ")\n\n",
     sep = "")
 
 .plotChart(Mypubs)
+
+cat("</p>")
 
 for (year in Myears){
     tmplist <- lapply(Mypubs, FUN = .selectyear, year = year)
