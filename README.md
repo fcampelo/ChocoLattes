@@ -24,6 +24,8 @@ rmarkdown::render(input = "group_lattes_XML2html.Rmd", output_file = "myGroupPub
 
 This routine also works for for individual CVs. ;-)  
 
+**NOTE**: The current version inserts an rCharts-based summary plot at the top of the page. If you want to remove the plot, just comment the command “.plotChart(Mypubs)” in the __.Rmd__ script (line 86). 
+
 That's all!  
 Cheers,  
 Felipe
