@@ -541,7 +541,7 @@ require(rCharts)
 	                    type  = "multiBarChart")
 	TotalsPlot$chart(color        = RColorBrewer::brewer.pal(8, "Set1"),
 	                 reduceXTicks = FALSE)
-	TotalsPlot$xAxis(rotateLabels=-90)
+	TotalsPlot$xAxis(rotateLabels = -45, staggerLabels = FALSE)
 	TotalsPlot$set(width = 800)
 	TotalsPlot$print('iframesrc', include_assets = TRUE)
 }
