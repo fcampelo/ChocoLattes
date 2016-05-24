@@ -2,7 +2,7 @@
 # by Felipe Campelo (fcampelo@ufmg.br ; http://github.com/fcampelo)
 
 # Load (and, if needed, install) required packages
-required.packages <- c("XML", "tools", "ggplot2", "plotly")#"devtools", "RColorBrewer")
+required.packages <- c("XML", "tools", "ggplot2", "plotly", "devtools", "RColorBrewer")
 install_and_load_packages <- function(pkg){
     if (!(pkg %in% rownames(installed.packages()))){
         install.packages(pkg)
@@ -11,9 +11,11 @@ install_and_load_packages <- function(pkg){
 }
 ignore <- lapply(required.packages, install_and_load_packages)
 
-# Installing from github
-#if (!("rCharts" %in% rownames(installed.packages()))) install_github("ramnathv/rCharts")
-#require(rCharts)
+# Installing rCharts from github
+if (!("rCharts" %in% rownames(installed.packages()))){
+	install_github("ramnathv/rCharts", ref = "479a4f98b9280c39785517a845072679674e5493")
+}
+require(rCharts)
 
 # ==========================================
 # Function to easily capitalize author lists
@@ -330,56 +332,6 @@ ignore <- lapply(required.packages, install_and_load_packages)
 
 
 
-# ==========================================
-# Function to plot summary chart
-.plotChart <- function(x){
-    myTotals           <- lapply(x, function(X){as.data.frame(table(X$Year))})
-    myTotals           <- do.call(rbind.data.frame, myTotals)
-    myTotals$Type      <- gsub("\\..*","",rownames(myTotals))
-    names(myTotals)    <- c("Year", "Count", "Type")
-    myTotals$Year      <- as.numeric(as.character(myTotals$Year))
-    myTotals           <- myTotals[order(myTotals$Year), ]
-    myTotals2          <- with(myTotals, 
-                               expand.grid(Year     = unique(Year), 
-                                           Type     = unique(Type)))
-    myTotals2$Count    <- 0
-    
-    rownames(myTotals2) <- paste0(myTotals2$Year, myTotals2$Type)
-    rownames(myTotals)  <- paste0(myTotals$Year, myTotals$Type)
-    for (i in 1:nrow(myTotals)){
-        indx <- which(rownames(myTotals2) == rownames(myTotals)[i])
-        if(length(indx)){
-            myTotals2$Count[indx] <- myTotals$Count[i]
-        }
-    }
-    
-    myPlot <- ggplot(data    = myTotals2, 
-                     mapping = aes(x     = Year, 
-                                   y     = Count, 
-                                   fill  = Type)) + 
-        geom_bar(stat     = "identity", 
-                 position = "stack", 
-                 colour   = "#00000011") + 
-        scale_x_continuous(breaks = min(myTotals2$Year):max(myTotals2$Year)) + 
-        theme(axis.text.x     = element_text(angle = 45, vjust = 0),
-              legend.position = "bottom")
-    
-    #myPlotly <- ggplotly(myPlot, width = 960, height = 480)
-    return(myPlot)
-    
-    # TotalsPlot <- nPlot(Count ~ Year, 
-    #                     group = "Type", 
-    #                     data  = myTotals2, 
-    #                     type  = "multiBarChart")
-    # TotalsPlot$chart(color        = RColorBrewer::brewer.pal(8, "Set1"), 
-    #                  reduceXTicks = FALSE)
-    # TotalsPlot$xAxis(rotateLabels=-90)
-    # TotalsPlot$set(width = 800)
-    # TotalsPlot$print('iframesrc', cdn = TRUE, include_assets = TRUE)
-}
-
-
-
 
 # ==========================================
 # Function to print accepted papers
@@ -542,4 +494,54 @@ ignore <- lapply(required.packages, install_and_load_packages)
                 sep = "")
         }
     }
+}
+
+
+
+# ==========================================
+# Function to plot summary chart
+.plotChart <- function(x){
+	myTotals           <- lapply(x, function(X){as.data.frame(table(X$Year))})
+	myTotals           <- do.call(rbind.data.frame, myTotals)
+	myTotals$Type      <- gsub("\\..*","",rownames(myTotals))
+	names(myTotals)    <- c("Year", "Count", "Type")
+	myTotals$Year      <- as.numeric(as.character(myTotals$Year))
+	myTotals           <- myTotals[order(myTotals$Year), ]
+	myTotals2          <- with(myTotals, 
+														 expand.grid(Year     = unique(Year), 
+														 						Type     = unique(Type)))
+	myTotals2$Count    <- 0
+	
+	rownames(myTotals2) <- paste0(myTotals2$Year, myTotals2$Type)
+	rownames(myTotals)  <- paste0(myTotals$Year, myTotals$Type)
+	for (i in 1:nrow(myTotals)){
+		indx <- which(rownames(myTotals2) == rownames(myTotals)[i])
+		if(length(indx)){
+			myTotals2$Count[indx] <- myTotals$Count[i]
+		}
+	}
+	
+	# myPlot <- ggplot(data    = myTotals2, 
+	# 								 mapping = aes(x     = Year, 
+	# 								 							y     = Count, 
+	# 								 							fill  = Type)) + 
+	# 	geom_bar(stat     = "identity", 
+	# 					 position = "stack", 
+	# 					 colour   = "#00000011") + 
+	# 	scale_x_continuous(breaks = min(myTotals2$Year):max(myTotals2$Year)) + 
+	# 	theme(axis.text.x     = element_text(angle = 45, vjust = 0),
+	# 				legend.position = "bottom")
+	# 
+	# #myPlotly <- ggplotly(myPlot, width = 960, height = 480)
+	# return(myPlot)
+	
+	TotalsPlot <- nPlot(Count ~ Year,
+	                    group = "Type",
+	                    data  = myTotals2,
+	                    type  = "multiBarChart")
+	TotalsPlot$chart(color        = RColorBrewer::brewer.pal(8, "Set1"),
+	                 reduceXTicks = FALSE)
+	TotalsPlot$xAxis(rotateLabels=-90)
+	TotalsPlot$set(width = 800)
+	TotalsPlot$print('iframesrc', include_assets = TRUE)
 }

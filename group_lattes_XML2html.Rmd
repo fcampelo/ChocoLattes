@@ -72,7 +72,7 @@ Myears <- sort(unique(unlist(MYears)), decreasing = TRUE)
 ```
 
 ```{r, results='asis',echo=FALSE, comment=NA, tidy=FALSE}
-cat('<a name="pagetop"></a>\n\n<p align = "center">', 
+cat('<a name="pagetop"></a>\n\n<p style="text-align: center;">', 
     sep = "")
 for(i in 1:(length(Myears) - 1)){
     cat("[", Myears[i], "](#", 
