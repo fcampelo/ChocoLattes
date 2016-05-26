@@ -25,19 +25,19 @@ for (lattes.indx in seq_along(myLattes)){
                                             encoding    = "latin"))
     
     # Get published journal papers
-    MyPapers <- .getPapers(doc)
+    MyPapers <- .getPapers(doc, lattes.indx)
     
     # Get accepted journal papers
-    MyAccept <- .getAccepted(doc)
+    MyAccept <- .getAccepted(doc, lattes.indx)
     
     # Get conference papers
-    MyConfs <- .getConfs(doc)
+    MyConfs <- .getConfs(doc, lattes.indx)
     
     # Get book chapters
-    MyChaps <- .getChaps(doc)
+    MyChaps <- .getChaps(doc, lattes.indx)
     
     # Get books
-    MyBooks <- .getBooks(doc)
+    MyBooks <- .getBooks(doc, lattes.indx)
 
     
     # ==========================================
@@ -97,7 +97,8 @@ for (year in Myears){
     .printBooks(tmplist[[5]])
     .printAccepted(tmplist[[1]])
     .printPapers(tmplist[[2]])
-    .printConfs(tmplist[[3]])
+    .printConfs(tmplist[[3]], isIntl = TRUE)
+    .printConfs(tmplist[[3]], isIntl = FALSE)
     .printChaps(tmplist[[4]])
     cat('<p align="right">[Back to top](#pagetop)</p>')
 }

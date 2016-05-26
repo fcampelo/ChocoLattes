@@ -67,7 +67,9 @@ require(rCharts)
     if ("ISBN" %in% names(x)){
         x <- x[order(x$ISBN), ]
     }
-    return(x[order(x$Year, decreasing = decreasing), ])
+    x <- x[order(x$Year, decreasing = decreasing), ]
+    if(nrow(x)) row.names(x) <- as.character(1:nrow(x))
+    return(x)
 }
 
 
@@ -80,6 +82,7 @@ require(rCharts)
         x              <- x[unique.indx, ]
         na.indx        <- grep(pattern = "zNotAvailable", x$DOI)
         x$DOI[na.indx] <- ""
+        if (nrow(x)) row.names(x) <- 1:nrow(x)
     }
     
     # Remove duplicates (by ISBN) and clean up placeholder values
@@ -88,6 +91,7 @@ require(rCharts)
         x              <- x[unique.indx, ]
         na.indx        <- grep(pattern = "zNotAvailable", x$ISBN)
         x$ISBN[na.indx] <- ""
+        if (nrow(x)) row.names(x) <- 1:nrow(x)
     }
     
     # Remove duplicates (by Title)
@@ -95,12 +99,14 @@ require(rCharts)
         titles      <- gsub("\\s", "", tolower(x$Title))
         unique.indx <- as.numeric(rownames(unique(data.frame(titles)[1])))
         x           <- x[unique.indx, ]
+        if (nrow(x)) row.names(x) <- 1:nrow(x)
     }
     
     # Remove inconsistencies in field "Year" (errors in the .xml due to typos)
     if("Year" %in% names(x)){
         ok.years <- as.numeric(x$Year) <= as.numeric(format(Sys.time(), "%Y"))
         x        <- x[ok.years, ]
+        if (nrow(x)) row.names(x) <- 1:nrow(x)
     }
     
     return (x)
@@ -117,7 +123,7 @@ require(rCharts)
 
 # ==========================================
 # Function to extract and format accepted papers
-.getAccepted <- function(x){
+.getAccepted <- function(x, k){
     npap     <- length(x$`PRODUCAO-BIBLIOGRAFICA`$`ARTIGOS-ACEITOS-PARA-PUBLICACAO`)
     MyAccept <- data.frame(Authors = character(npap),
                            Title   = character(npap),
@@ -131,7 +137,7 @@ require(rCharts)
             MyAccept$Title[i]   <- tools::toTitleCase(tolower(paper$`DADOS-BASICOS-DO-ARTIGO`[[2]]))
             MyAccept$Journal[i] <- paper$`DETALHAMENTO-DO-ARTIGO`[[1]]
             MyAccept$DOI[i]     <- ifelse(paper$`DADOS-BASICOS-DO-ARTIGO`[[9]] == "",
-                                          paste0("zNotAvailable no.", i),
+                                          paste0("zNotAvailable no.", k, "-", i),
                                           paper$`DADOS-BASICOS-DO-ARTIGO`[[9]])
             MyAccept$Year[i]    <- paper$`DADOS-BASICOS-DO-ARTIGO`[[3]]
             authindx            <- which(names(paper) == "AUTORES")
@@ -153,7 +159,7 @@ require(rCharts)
 
 # ==========================================
 # Function to extract and format published papers
-.getPapers <- function(x){
+.getPapers <- function(x, k){
     npap     <- length(x$`PRODUCAO-BIBLIOGRAFICA`$`ARTIGOS-PUBLICADOS`)
     MyPapers <- data.frame(Authors = character(npap),
                            Title   = character(npap),
@@ -180,7 +186,7 @@ require(rCharts)
                                           paper$`DETALHAMENTO-DO-ARTIGO`[[7]])
             MyPapers$Year[i]    <- paper$`DADOS-BASICOS-DO-ARTIGO`[[3]]
             MyPapers$DOI[i]     <- ifelse(paper$`DADOS-BASICOS-DO-ARTIGO`[[9]] == "",
-                                          paste0("zNotAvailable no.", i),
+                                          paste0("zNotAvailable no.", k, "-", i),
                                           paper$`DADOS-BASICOS-DO-ARTIGO`[[9]])
             authindx            <- which(names(paper) == "AUTORES")
             nauthors            <- length(authindx)
@@ -201,7 +207,7 @@ require(rCharts)
 
 # ==========================================
 # Function to extract and format conference papers
-.getConfs <- function(x){
+.getConfs <- function(x, k){
     npap    <- length(x$`PRODUCAO-BIBLIOGRAFICA`$`TRABALHOS-EM-EVENTOS`)
     MyConfs <- data.frame(Authors    = character(npap),
                           Title      = character(npap),
@@ -210,6 +216,7 @@ require(rCharts)
                           DOI        = character(npap),
                           Pages      = character(npap),
                           Year       = character(npap),
+                          Internac   = logical(npap),
                           stringsAsFactors = FALSE)
     
     if (npap){
@@ -224,8 +231,9 @@ require(rCharts)
                                             "-",
                                             paper$`DETALHAMENTO-DO-TRABALHO`[[10]])
             MyConfs$DOI[i]        <- ifelse(paper$`DADOS-BASICOS-DO-TRABALHO`[[9]] == "",
-                                            paste0("zNotAvailable no.", i),
+                                            paste0("zNotAvailable no.", k, "-", i),
                                             paper$`DADOS-BASICOS-DO-TRABALHO`[[9]])
+            MyConfs$Internac[i]   <- (paper$`DETALHAMENTO-DO-TRABALHO`[[1]] == "INTERNACIONAL")
             authindx              <- which(names(paper) == "AUTORES")
             nauthors              <- length(authindx)
             MyConfs$Authors[i]    <- .authorname(paper[[authindx[1]]][1])
@@ -245,7 +253,7 @@ require(rCharts)
 
 # ==========================================
 # Function to extract and format book chapters
-.getChaps <- function(x){
+.getChaps <- function(x, k){
     npap    <- length(x$`PRODUCAO-BIBLIOGRAFICA`$`LIVROS-E-CAPITULOS`$`CAPITULOS-DE-LIVROS-PUBLICADOS`)
     MyChaps <- data.frame(Authors  = character(npap),
                           Title    = character(npap),
@@ -267,7 +275,7 @@ require(rCharts)
                                           "-",
                                           paper$`DETALHAMENTO-DO-CAPITULO`[[4]])
             MyChaps$DOI[i]      <- ifelse(paper$`DADOS-BASICOS-DO-CAPITULO`[[9]] == "",
-                                          paste0("zNotAvailable no.", i),
+                                          paste0("zNotAvailable no.", k, "-", i),
                                           paper$`DADOS-BASICOS-DO-CAPITULO`[[9]])
             authindx            <- which(names(paper) == "AUTORES")
             nauthors            <- length(authindx)
@@ -288,7 +296,7 @@ require(rCharts)
 
 # ==========================================
 # Function to extract and format books
-.getBooks <- function(x){
+.getBooks <- function(x, k){
     npap    <- length(x$`PRODUCAO-BIBLIOGRAFICA`$`LIVROS-E-CAPITULOS`$`LIVROS-PUBLICADOS-OU-ORGANIZADOS`)
     MyBooks <- data.frame(Authors   = character(npap),
                           Bookname  = character(npap),
@@ -312,7 +320,7 @@ require(rCharts)
             MyBooks$Pages[i]     <- paper$`DETALHAMENTO-DO-LIVRO`[[2]]
             MyBooks$Year[i]      <- paper$`DADOS-BASICOS-DO-LIVRO`[[4]]
             MyBooks$ISBN[i]      <- ifelse(paper$`DETALHAMENTO-DO-LIVRO`[[3]] == "",
-                                           paste0("zNotAvailable no.", i),
+                                           paste0("zNotAvailable no.", k, "-", i),
                                            paper$`DETALHAMENTO-DO-LIVRO`[[3]])
             authindx             <- which(names(paper) == "AUTORES")
             nauthors             <- length(authindx)
@@ -396,10 +404,14 @@ require(rCharts)
 
 # ==========================================
 # Function to print conference papers
-.printConfs <- function(x){
+.printConfs <- function(x, isIntl = TRUE){
+    x <- x[which(x$Internac == isIntl), ]
     npap <- nrow(x)
     if(npap){
-        cat("### Conference Proceedings\n")
+        cat("### Conference Proceedings -",
+            ifelse(isIntl, 
+                   "International\n",
+                   "National/Regional\n"))
         for (i in 1:nrow(x)){
             cat(i, ". ",
                 x$Authors[i],
@@ -501,47 +513,53 @@ require(rCharts)
 # ==========================================
 # Function to plot summary chart
 .plotChart <- function(x){
-	myTotals           <- lapply(x, function(X){as.data.frame(table(X$Year))})
-	myTotals           <- do.call(rbind.data.frame, myTotals)
-	myTotals$Type      <- gsub("\\..*","",rownames(myTotals))
-	names(myTotals)    <- c("Year", "Count", "Type")
-	myTotals$Year      <- as.numeric(as.character(myTotals$Year))
-	myTotals           <- myTotals[order(myTotals$Year), ]
-	myTotals2          <- with(myTotals, 
-														 expand.grid(Year     = unique(Year), 
-														 						Type     = unique(Type)))
-	myTotals2$Count    <- 0
-	
-	rownames(myTotals2) <- paste0(myTotals2$Year, myTotals2$Type)
-	rownames(myTotals)  <- paste0(myTotals$Year, myTotals$Type)
-	for (i in 1:nrow(myTotals)){
-		indx <- which(rownames(myTotals2) == rownames(myTotals)[i])
-		if(length(indx)){
-			myTotals2$Count[indx] <- myTotals$Count[i]
-		}
-	}
-	
-	# myPlot <- ggplot(data    = myTotals2, 
-	# 								 mapping = aes(x     = Year, 
-	# 								 							y     = Count, 
-	# 								 							fill  = Type)) + 
-	# 	geom_bar(stat     = "identity", 
-	# 					 position = "stack", 
-	# 					 colour   = "#00000011") + 
-	# 	scale_x_continuous(breaks = min(myTotals2$Year):max(myTotals2$Year)) + 
-	# 	theme(axis.text.x     = element_text(angle = 45, vjust = 0),
-	# 				legend.position = "bottom")
-	# 
-	# #myPlotly <- ggplotly(myPlot, width = 960, height = 480)
-	# return(myPlot)
-	
-	TotalsPlot <- nPlot(Count ~ Year,
-	                    group = "Type",
-	                    data  = myTotals2,
-	                    type  = "multiBarChart")
-	TotalsPlot$chart(color        = RColorBrewer::brewer.pal(8, "Set1"),
-	                 reduceXTicks = FALSE)
-	TotalsPlot$xAxis(rotateLabels = -45, staggerLabels = FALSE)
-	TotalsPlot$set(width = 800)
-	TotalsPlot$print('iframesrc', include_assets = TRUE)
+    x$`Conference Papers - International`     <- x$`Conference Papers`[which(x$`Conference Papers`$Internac), ]
+    x$`Conference Papers - National/Regional` <- x$`Conference Papers`[which(!x$`Conference Papers`$Internac), ]
+    x$`Conference Papers` <- NULL
+    myTotals              <- lapply(x, function(X){as.data.frame(table(X$Year))})
+    myTotals              <- do.call(rbind.data.frame, myTotals)
+    myTotals$Type         <- gsub("\\..*","",rownames(myTotals))
+    names(myTotals)       <- c("Year", "Count", "Type")
+    myTotals$Year         <- as.numeric(as.character(myTotals$Year))
+    myTotals              <- myTotals[order(myTotals$Year), ]
+    myTotals2             <- with(myTotals, 
+                                  expand.grid(Year     = unique(Year), 
+                                              Type     = unique(Type)))
+    myTotals2$Count    <- 0
+    
+    rownames(myTotals2) <- paste0(myTotals2$Year, myTotals2$Type)
+    rownames(myTotals)  <- paste0(myTotals$Year, myTotals$Type)
+    for (i in 1:nrow(myTotals)){
+        indx <- which(rownames(myTotals2) == rownames(myTotals)[i])
+        if(length(indx)){
+            myTotals2$Count[indx] <- myTotals$Count[i]
+        }
+    }
+    
+    # Using ggplot2 + plotly
+    # myPlot <- ggplot(data    = myTotals2, 
+    # 								 mapping = aes(x     = Year, 
+    # 								 							y     = Count, 
+    # 								 							fill  = Type)) + 
+    # 	geom_bar(stat     = "identity", 
+    # 					 position = "stack", 
+    # 					 colour   = "#00000011") + 
+    # 	scale_x_continuous(breaks = min(myTotals2$Year):max(myTotals2$Year)) + 
+    # 	theme(axis.text.x     = element_text(angle = 45, vjust = 0),
+    # 				legend.position = "bottom")
+    # 
+    # #myPlotly <- ggplotly(myPlot, width = 960, height = 480)
+    # return(myPlot)
+    
+    # Using rCharts
+    TotalsPlot <- nPlot(Count ~ Year,
+                        group = "Type",
+                        data  = myTotals2,
+                        type  = "multiBarChart")
+    TotalsPlot$chart(color        = RColorBrewer::brewer.pal(8, "Set1"),
+                     reduceXTicks = FALSE)
+    TotalsPlot$xAxis(rotateLabels = -45, staggerLabels = FALSE)
+    TotalsPlot$chart(multibar.stacked = TRUE)
+    TotalsPlot$set(width = 800)
+    TotalsPlot$print('iframesrc', include_assets = TRUE)
 }
