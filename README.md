@@ -3,6 +3,8 @@ R Markdown script to extract publications (journal papers, conference papers, an
 
 ## How to use
 
+(_Note: If you use this script and publish the resulting page anywhere, please let me know - I take some pride in these small things. ;-)_)
+
 If you want to generate a publication list from multiple Lattes CVs (e.g., for your research group), without duplicated entries due to co-authored works:
 
 1) Download the Lattes CVs in XML format (top right of the Lattes CV page). 
@@ -24,7 +26,7 @@ rmarkdown::render(input = "group_lattes_XML2html.Rmd", output_file = "myGroupPub
 
 This routine also works for for individual CVs. ;-)  
 
-**NOTE**: The current version inserts an rCharts-based summary plot at the top of the page. If you want to remove the plot, just comment the command “.plotChart(Mypubs)” in the __.Rmd__ script (line 86). 
+**NOTE**: The current version inserts an rCharts-based summary plot at the top of the page, which makes the resulting HTML much heavier. If you want to remove the plot, just comment the command “.plotChart(Mypubs)” in the __.Rmd__ script (line 86). 
 
 That's all!  
 Cheers,  
