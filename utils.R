@@ -2,10 +2,10 @@
 # by Felipe Campelo (fcampelo@ufmg.br ; http://github.com/fcampelo)
 
 # Load (and, if needed, install) required packages
-required.packages <- c("XML", "tools", "ggplot2", "plotly", "devtools", "RColorBrewer")
+required.packages <- c("XML", "tools", "devtools", "RColorBrewer") # "ggplot2", "plotly"
 install_and_load_packages <- function(pkg){
     if (!(pkg %in% rownames(installed.packages()))){
-        install.packages(pkg)
+        install.packages(pkg, repos = "http://cran.us.r-project.org")
     }
     require(pkg, character.only = TRUE)
 }
