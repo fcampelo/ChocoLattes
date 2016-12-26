@@ -348,18 +348,22 @@ require(rCharts)
     if(npap){
         cat("### Papers Accepted for Publication\n")
         for (i in 1:npap){
-            cat(i, ". ",
-                x$Authors[i], ": _",
-                x$Title[i], "._ ",
-                x$Journal[i], ", ",
-                x$Year[i],
-                sep = "")
             if(x$DOI[i] != ""){
-                cat(".<br/>[[DOI: ",
-                    x$DOI[i],
-                    "](http://dx.doi.org/",
-                    x$DOI[i], ")]",
-                    sep = "")
+              cat(i, ". ",
+                  x$Authors[i], ": _", 
+                  "[", x$Title[i], "](http://dx.doi.org/", x$DOI[i], ")", "._ ",
+                  x$Journal[i], ", ",
+                  x$Year[i],
+                  sep = "")
+            }
+            else{
+              url <- paste0('http://scholar.google.com.br/scholar?hl=pt-BR&q=', x$Title[i], "&as_sauthors=", x$Authors[i], sep="")
+              cat(i, ". ",
+                  x$Authors[i], ": _", 
+                  "[", x$Title[i], "]", "(", url, ")", "._ ",
+                  x$Journal[i], ", ",
+                  x$Year[i],
+                  sep = "")
             }
             cat("\n\n<hr>",
                 sep = "")
@@ -375,26 +379,33 @@ require(rCharts)
     if(npap){
         cat("### Journal Papers\n")
         for (i in 1:nrow(x)){
-            cat(i, ". ",
-                x$Authors[i],
-                ": _", x$Title[i], "._ ",
-                x$Journal[i], " ",
-                x$Volume[i], 
-                "(", x$Issue[i], ")",
-                sep = "")
+            if(x$DOI[i] != ""){
+              cat(i, ". ",
+                  x$Authors[i],
+                  ": _", 
+                  "[", x$Title[i], "](http://dx.doi.org/", x$DOI[i], ")", "._ ",
+                  x$Journal[i], " ",
+                  x$Volume[i], 
+                  "(", x$Issue[i], ")",
+                  sep = "")
+            }
+            else{
+              url <- paste0('http://scholar.google.com.br/scholar?hl=pt-BR&q=', x$Title[i], "&as_sauthors=", x$Authors[i], sep="")
+              cat(i, ". ",
+                  x$Authors[i],
+                  ": _", 
+                  "[", x$Title[i], "]", "(", url, ")", "._ ",
+                  x$Journal[i], " ",
+                  x$Volume[i], 
+                  "(", x$Issue[i], ")",
+                  sep = "")
+            }
             if(length(grep("[0-9]+-[0-9]+$", x$Pages[i]))){
                 cat(":", x$Pages[i], 
                     sep = "")
             }
             cat(", ", x$Year[i], 
                 sep = "")
-            if(x$DOI[i] != ""){
-                cat(".<br/>[[DOI: ",
-                    x$DOI[i],
-                    "](http://dx.doi.org/",
-                    x$DOI[i], ")]",
-                    sep = "")
-            }
             cat("\n\n<hr>",
                 sep = "")
         }
@@ -405,72 +416,83 @@ require(rCharts)
 # ==========================================
 # Function to print conference papers
 .printConfs <- function(x, isIntl = TRUE){
-    x <- x[which(x$Internac == isIntl), ]
-    npap <- nrow(x)
-    if(npap){
-        cat("### Conference Proceedings -",
-            ifelse(isIntl, 
-                   "International\n",
-                   "National/Regional\n"))
-        for (i in 1:nrow(x)){
+  x <- x[which(x$Internac == isIntl), ]
+  npap <- nrow(x)
+  if(npap){
+    cat("### Conference Proceedings -",
+        ifelse(isIntl, 
+               "International\n",
+               "National/Regional\n"))
+    for (i in 1:nrow(x)){
+      if( x$DOI[i] != ""){
             cat(i, ". ",
-                x$Authors[i],
-                ": _", x$Title[i], "._ ",
-                x$Conference[i], ", ",
-                sep = "")
-            if(length(grep("[0-9]+-[0-9]+$", x$Pages[i]))){
-                cat("pp. ", x$Pages[i], 
-                    sep = "")
-            }
-            cat(", ", x$Year[i], 
-                sep = "")
-            if(x$DOI[i] != ""){
-                cat(".<br/>[[DOI: ",
-                    x$DOI[i],
-                    "](http://dx.doi.org/",
-                    x$DOI[i], ")]",
-                    sep = "")
-            }
-            cat("\n\n<hr>",
-                sep = "")
-        }
+            	x$Authors[i], ": _", 
+            	"[", x$Title[i], "](http://dx.doi.org/", x$DOI[i], ")", "._ ",
+            	x$Conference[i], ", ",
+            	sep = "")
+      }
+      else{
+        url <- paste0('http://scholar.google.com.br/scholar?hl=pt-BR&q=', x$Title[i], "&as_sauthors=", x$Authors[i], sep="")
+            cat(i, ". ",
+            	x$Authors[i], ": _", 
+            	"[", x$Title[i], "]", "(", url, ")", "._ ",
+            	x$Conference[i], ", ",
+            	sep = "")
+      }
+      if(length(grep("[0-9]+-[0-9]+$", x$Pages[i]))){
+          cat("pp.", x$Pages[i], ", ", 
+              sep = "")
+      }
+      cat(x$Year[i],
+          sep = "")
+      cat("\n\n<hr>",
+          sep = "")
     }
+  }
 }
-
 
 # ==========================================
 # Function to print book chapters
 .printChaps <- function(x){
-    npap <- nrow(x)
-    if(npap){
-        cat("### Book Chapters\n")
-        for (i in 1:nrow(x)){
-            cat(i, ". ",
-                x$Authors[i],
-                ": _", x$Title[i], "._ ",
-                "In: ", x$Bookname[i], ", ",
-                "vol. ", ifelse(x$Volume == "",
+  npap <- nrow(x)
+  if(npap){
+    cat("### Book Chapters\n")
+    for (i in 1:nrow(x)){
+      if( x$DOI[i] != ""){
+        cat(i, ". ",
+            x$Authors[i],
+            ": _", 
+            "[", x$Title[i], "](http://dx.doi.org/", x$DOI[i], ")", "._ ",
+            "In: ", x$Bookname[i], ", ",
+            "vol. ", ifelse(x$Volume == "",
+                            "1",
+                            x$Volume),
+            sep = "")
+        }
+        else{
+          url <- paste0('http://scholar.google.com.br/scholar?hl=pt-BR&q=', x$Title[i], "&as_sauthors=", x$Authors[i], sep="")
+          cat(i, ". ",
+              x$Authors[i],
+              ": _", 
+              "[", x$Title[i], "]", "(", url, ")", "._ ",
+              "In: ", x$Bookname[i], ", ",
+              "vol. ", ifelse(x$Volume == "",
                                 "1",
                                 x$Volume),
                 sep = "")
-            if(length(grep("[0-9]+-[0-9]+$", x$Pages[i]))){
-                cat(". pp. ", x$Pages[i], 
+        }
+        if(length(grep("[0-9]+-[0-9]+$", x$Pages[i]))){
+                cat(". pp. ,", x$Pages[i], ", ",
                     sep = "")
             }
-            cat(", ", x$Year[i], 
+            cat(x$Year[i], 
                 sep = "")
-            if(x$DOI[i] != ""){
-                cat(".<br/>[[DOI: ",
-                    x$DOI[i],
-                    "](http://dx.doi.org/",
-                    x$DOI[i], ")]",
-                    sep = "")
-            }
             cat("\n\n<hr>",
                 sep = "")
         }
     }
 }
+
 
 
 # ==========================================
@@ -496,7 +518,7 @@ require(rCharts)
                 cat(x$Pages[i], " pages. ",
                     sep = "")
             }
-            cat(x$Year, ". ",
+            cat(x$Year[i], ". ",
                 sep = "")
             if(x$ISBN[i] != ""){
                 cat("ISBN: ", x$ISBN[i], ".",
