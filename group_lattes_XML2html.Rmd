@@ -9,7 +9,7 @@ output: html_document
 # R script by Felipe Campelo (fcampelo@ufmg.br)
 
 # Your XML files. Multiple files allowed.
-myLattes  <- c("curriculo.xml", "curriculo2.xml", "curriculo3.xml")
+myLattes  <- c("curriculo.xml", "curriculo-2.xml", "curriculo-3.xml")
 
 # Load required packages and functions
 source("utils.R")
