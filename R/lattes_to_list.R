@@ -12,12 +12,14 @@ lattes_to_list <- function(filenames = NULL,
   myLattes <- paste0(CV.dir, "/", filename)
 
   # Prepare list for results
-  out.list        <- vector("list", 5)
+  out.list        <- vector("list", 7)
   names(out.list) <- c("Accepted for Publication",
                        "Journal Papers",
                        "Conference Papers",
                        "Book Chapters",
-                       "Books")
+                       "Books",
+                       "MSc Dissertations",
+                       "PhD Theses")
 
   for (indx in seq_along(myLattes)){
     # Read XML to a list object
@@ -31,7 +33,8 @@ lattes_to_list <- function(filenames = NULL,
     MyConfs  <- get_conference_papers(x, ID = indx)
     MyChaps  <- get_book_chapters(x, ID = indx)
     MyBooks  <- get_books(x, ID = indx)
-
+    MyMsc    <- get_advised_dissertations(x, ID = indx)
+    MyPhd    <- get_advised_theses(x, ID = indx)
 
     # ==========================================
 
@@ -41,12 +44,16 @@ lattes_to_list <- function(filenames = NULL,
       out.list[[3]]   <- MyConfs
       out.list[[4]]   <- MyChaps
       out.list[[5]]   <- MyBooks
+      out.list[[6]]   <- MyMsc
+      out.list[[7]]   <- MyPhd
     } else {
       out.list[[1]]   <- rbind(out.list[[1]], MyAccept)
       out.list[[2]]   <- rbind(out.list[[2]], MyPapers)
       out.list[[3]]   <- rbind(out.list[[3]], MyConfs)
       out.list[[4]]   <- rbind(out.list[[4]], MyChaps)
       out.list[[5]]   <- rbind(out.list[[5]], MyBooks)
+      out.list[[6]]   <- rbind(out.list[[6]], MyMsc)
+      out.list[[7]]   <- rbind(out.list[[7]], MyPhd)
     }
   }
 
