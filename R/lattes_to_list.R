@@ -5,7 +5,7 @@ lattes_to_list <- function(filenames = NULL,
                            CV.dir    = NULL){
 
   CV.dir <- paste0(getwd(), "/", CV.dir)
-  if (is.null(filename)) {
+  if (is.null(filenames)) {
     filename <- dir(CV.dir, pattern = ".xml")
   }
 

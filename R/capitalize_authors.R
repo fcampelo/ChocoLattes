@@ -10,23 +10,23 @@
 #' @return data frame with (hopefully) correctly capitalized author names in column "Authors".
 capitalize_authors <- function(x, make.lower = c("De", "Da", "Do", "E")) {
   if("Authors" %in% names(x) && nrow(x)){
-    x$Authors <- lapply(x$Authors, FUN = capfun)
+    x$Authors <- lapply(x$Authors, FUN = capfun, make.lower = make.lower)
   }
   if("Author" %in% names(x) && nrow(x)){
-    x$Author <- lapply(x$Author, FUN = capfun)
+    x$Author <- lapply(x$Author, FUN = capfun, make.lower = make.lower)
   }
   return(x)
 }
 
 #=======
-capfun <- function(y){
+capfun <- function(y, make.lower){
   s <- strsplit(y, " ")[[1]]
   s <- paste(toupper(substring(s, 1, 1)),
              tolower(substring(s, 2)),
              sep = "", collapse = " ")
-  if(length(keep.lower)){
-    for (i in seq_along(keep.lower)){
-      key <- paste0(" ", keep.lower[i], " ")
+  if(length(make.lower)){
+    for (i in seq_along(make.lower)){
+      key <- paste0(" ", make.lower[i], " ")
       s <- gsub(pattern     = key,
                 replacement = tolower(key),
                 x           = s)
