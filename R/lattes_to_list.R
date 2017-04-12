@@ -1,5 +1,31 @@
-#' @param filenames character vector containing name of the file(s) to be processed. If NULL then use all XML files in the folder given by `CV.dir`
-#' @param CV.dir folder where CVs are contained, relative to current working directory (**do not** use `.\` to refer the the current folder). If NULL then the current working directory is used.
+#' Convert a set of Lattes CV XML files to a list object
+#'
+#' Extract information from a set of Lattes XML files and convert it to a list
+#' vector
+#'
+#' This function extracts relevant information from a set of Lattes CV XML files
+#' and outputs a list object containing specific information on the following
+#' aspects of a group's production:
+#' - Accepted journal papers
+#' - Published journal papers
+#' - Published conference papers
+#' - Published book chapters
+#' - Published books
+#' - Ph.D. student defenses
+#' - M.Sc. student defenses
+#'
+#' Journal and conference papers are checked for duplication using DOI and Title
+#' information. Duplicated entries are registered only once.
+#' @param filenames character vector containing name of the file(s) to be
+#' processed. If NULL then use all XML files in the folder given by `CV.dir`
+#' @param CV.dir folder where CVs are contained, relative to current working
+#' directory (**do not** use "./" to refer the the current folder). If NULL
+#' then the current working directory is used.
+#'
+#' @return list vector where each element is a dataframe with information on a
+#' specific aspect of the academic production
+#'
+#' @export
 
 lattes_to_list <- function(filenames = NULL,
                            CV.dir    = NULL){
