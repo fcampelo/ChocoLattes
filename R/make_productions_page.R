@@ -13,7 +13,7 @@ make_productions_page <- function(lattes.list,
                                   ){
 
   # Match argument
-  type <- match.arg(type, c("ggplot2", "plotly", "rCharts"))
+  chart.type <- match.arg(chart.type, c("ggplot2", "plotly", "rCharts"))
 
   # Save lattes.list as temporary file
   saveRDS(object = lattes.list, file = "./lattes_list.tmp")
@@ -22,55 +22,52 @@ make_productions_page <- function(lattes.list,
   md.file <- file("prod_page.Rmd",
                   open = "wt", encoding = "UTF-8")
 
-  # Write to md file
+  # =============== Write to md file =============== #
   writeLines("---\n    output: html_document\n---\n", con = md.file)
-  writeLines(cat("<h1>",h1.title,"</h1>", sep = ""), con = md.file)
-  writeLines(cat("<h2>",h2.title,"</h2>\n<hr>", sep = ""), con = md.file)
+  writeLines(paste0("<h1>", h1.title, "</h1>"), con = md.file)
+  writeLines(paste0("<h2>", h2.title, "</h2>\n<hr>\n\n"), con = md.file)
 
   writeLines("```{r setup, include=FALSE, echo=FALSE, warning=FALSE, error=FALSE}", con = md.file)
-  writeLines("lattes.list <- readRDS('./lattes_list.tmp')")
+  writeLines("lattes.list <- readRDS('./lattes_list.tmp')", con = md.file)
   writeLines("Prod.Years <- lapply(lattes.list, FUN = function(x){unique(x$Year)})", con = md.file)
   writeLines("years <- sort(unique(unlist(Prod.Years)), decreasing = TRUE)", con = md.file)
   writeLines("```", con = md.file)
 
   writeLines("```{r, results='asis', echo=FALSE, comment=NA, tidy=FALSE, fig.align='center', fig.width=9}", con = md.file)
-  writeLines("cat('<a name=\"pagetop\"></a>\n\n<p align=\"center\">', sep = \"\")", con = md.file)
-  writeLines("for(i in 1:(length(Myears) - 1)){\ncat(\"[\", Myears[i], \"](#\",\nMyears[i], \") | \",\nsep = \"\")\n}", con = md.file)
-  writeLines("cat(\"[\", Myears[length(Myears)], \"](#\",\nMyears[length(Myears)], \")\n\n\",\nsep = \"\")", con = md.file)
+  writeLines("cat('<a name=\"pagetop\"></a>\\n\\n<p align=\"center\">', sep = \"\")", con = md.file)
+  writeLines("for(i in 1:(length(years) - 1)){\ncat(\"[\", years[i], \"](#\",\nyears[i], \") | \",\nsep = \"\")\n}", con = md.file)
+  writeLines("cat(\"[\", years[length(years)], \"](#\", years[length(years)], \")\\n\\n\", sep = \"\")", con = md.file)
 
-  writeLines(cat("plot_chart(lattes.list, chart.type = '", chart.type,
-                 "', width = ", chart.width,
-                 ", height = ", chart.height, ")",
-                 sep = ""), con = md.file)
+  writeLines(paste0("plot_chart(lattes.list, chart.type = '", chart.type,
+                    "', width = ", chart.width,
+                    ", height = ", chart.height, ")"), con = md.file)
   writeLines("cat(\"</p>\")", con = md.file)
 
-  # STOPPED HERE =====================
+  writeLines("for (year in years){", con = md.file)
+  writeLines("tmplist <- lapply(lattes.list, function(x,year){x[x$Year == year, ]}, year = year)", con = md.file)
+  writeLines("cat('<a name=\"', year, '\"></a>\\n\\n', '## ', year, '\\n', sep = \"\")", con = md.file)
+  writeLines("print_books(tmplist$Books)", con = md.file)
+  writeLines("print_accepted(tmplist$`Accepted for Publication`)", con = md.file)
+  writeLines("print_journal_papers(tmplist$`Journal Papers`)", con = md.file)
+  writeLines("print_conferences(tmplist$`Conference Papers`, isIntl = TRUE)", con = md.file)
+  writeLines("print_conferences(tmplist$`Conference Papers`, isIntl = FALSE)", con = md.file)
+  writeLines("print_book_chapters(tmplist$`Book Chapters`)", con = md.file)
+  writeLines("print_books(tmplist$Books)", con = md.file)
+  writeLines("cat('<p align=\"right\">[Back to top](#pagetop)</p>')\n}\n```\n\n", con = md.file)
 
-  for (year in Myears){
-    tmplist <- lapply(Mypubs, FUN = .selectyear, year = year)
-    cat('<a name="', year, '"></a>\n\n',
-        '## ', year, '\n',
-        sep = "")
-
-    # Print that year's works to markdown and HTML
-    .printBooks(tmplist$Books)
-    .printAccepted(tmplist$Accepted)
-    .printPapers(tmplist$Papers)
-    .printConfs(tmplist$Confs, isIntl = TRUE)
-    .printConfs(tmplist$Confs, isIntl = FALSE)
-    .printChaps(tmplist$Chaps)
-    cat('<p align="right">[Back to top](#pagetop)</p>')
-  }
-
+  writeLines("<div style=\"background-color:#eeeeee; width:600px\">", con = md.file)
+  writeLines("Last updated: `r date()`<br/>", con = md.file)
+  writeLines("Created with [ChocoLattes](https://github.com/fcampelo/ChocoLattes)<br/>", con = md.file)
+  writeLines("[ORCS Lab](http://orcslab.ppgee.ufmg.br) - Operational Research and Complex Systems Laboratory<br/>", con = md.file)
+  writeLines("Universidade Federal de Minas Gerais, Belo horizonte MG, Brazil\n</div>", con = md.file)
 
   close(md.file)
 
-  # remove temp file
-  file.remove("./lattes_list.tmp")
+  # Render page
+  rmarkdown::render(input = "./prod_page.Rmd")
 
+  # remove temp files
+  success <- all(file.remove(c("./lattes_list.tmp", "./prod_page.Rmd")))
 
-
-
-
-
+  return(success)
 }

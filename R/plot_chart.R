@@ -27,7 +27,7 @@ plot_chart <- function(lattes.list,
                        height = 480){
 
   # Match argument
-  type <- match.arg(type, c("ggplot2","plotly","rCharts"))
+  type <- match.arg(chart.type, c("ggplot2","plotly","rCharts"))
 
   # preprocess lattes.list
   lattes.list$`Conference Papers - International` <- lattes.list$`Conference Papers`[which(lattes.list$`Conference Papers`$Internac), ]
