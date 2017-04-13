@@ -7,11 +7,11 @@ Imports:
     XML, 
     tools, 
     ggplot2,
-    plotly,
-    assertthat
+    plotly
 Suggests: 
     devtools,
-    rCharts
+    rCharts,
+    RColorBrewer
 Depends: R (>= 3.3.1)
 Author: Felipe Campelo
 Maintainer: Felipe Campelo <fcampelo@ufmg.br>
