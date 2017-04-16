@@ -12,8 +12,9 @@ Imports:
     knitr
 Suggests: 
     devtools,
-    rCharts,
-    RColorBrewer
+    RColorBrewer,
+    rCharts
+Additional_repositories: https://github.com/ramnathv/rCharts
 Depends: R (>= 3.3.1)
 Author: Felipe Campelo
 Maintainer: Felipe Campelo <fcampelo@ufmg.br>
