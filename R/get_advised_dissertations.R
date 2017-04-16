@@ -4,13 +4,13 @@
 #'
 #' This function extracts relevant information on advised MSc dissertations from a Lattes list.
 #'
-#' @param x Lattes list (generated internally in [Lattes_to_list()])
+#' @param x Lattes list (generated internally in [lattes_to_list()])
 #' @param ID a unique identifier for each CV being processed.
 #'
 #' @return data frame containing parsed information on advised MSc dissertations
 
 get_advised_dissertations <- function(x,
-                                      ID = runif()){
+                                      ID = stats::runif()){
   which.msc <- which(names(x$`OUTRA-PRODUCAO`$`ORIENTACOES-CONCLUIDAS`) == "ORIENTACOES-CONCLUIDAS-PARA-MESTRADO")
   n.items   <- length(which.msc)
   out.df    <- data.frame(Author        = character(n.items),

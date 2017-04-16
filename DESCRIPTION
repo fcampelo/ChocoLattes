@@ -1,14 +1,15 @@
 Package: ChocoLattes
 Type: Package
 Title: ChocoLattes: Processing Data from Lattes CV Files
-Date: 2017-4-1
-Version: 0.1.0.9000
+Date: 2017-4-15
+Version: 0.1.0
 Imports: 
     XML, 
     tools, 
     ggplot2,
     plotly,
-    rmarkdown
+    rmarkdown,
+    knitr
 Suggests: 
     devtools,
     rCharts,

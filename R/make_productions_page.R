@@ -1,8 +1,17 @@
+#' Generate HTML page with productions list and summary chart
+#'
+#' This function generates an HTML page with productions list and summary chart.
+#' Use chart.type = "plotly" or "rCharts" for interactive plots, and "ggplot2" for a static one.
+#'
 #' @param lattes.list a Lattes list object created using [lattes_to_list()]
 #' @param chart.type package to use for generating the summary chart. "plotly" and
 #' "rCharts" output interactive charts, "ggplot2" outputs a static one.
-#' @param width plot width (for "plotly" and "rCharts")
-#' @param height plot height (for "plotly")
+#' @param chart.width plot width (for "plotly" and "rCharts")
+#' @param chart.height plot height (for "plotly")
+#' @param h1.title H1 title for the page
+#' @param h2.title H2 subtitle for the page
+#'
+#' @export
 
 make_productions_page <- function(lattes.list,
                                   chart.type   = c("ggplot2", "plotly", "rCharts"),

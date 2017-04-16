@@ -45,10 +45,9 @@ plot_chart <- function(lattes.list,
   rownames(myTotals)    <- paste0(myTotals$Year, myTotals$Type)
 
   # Second data frame containing all entries by year (even if with 0 occurrences)
-  myTotals2          <- with(myTotals,
-                             expand.grid(Year     = unique(Year),
-                                         Type     = unique(Type)))
-  myTotals2$Count    <- 0
+  myTotals2          <- cbind(expand.grid(Year = unique(myTotals$Year),
+                                          Type = unique(myTotals$Type)),
+                              Count = 0)
   rownames(myTotals2) <- paste0(myTotals2$Year, myTotals2$Type)
 
   # Populate counts for myTotals2
@@ -63,9 +62,9 @@ plot_chart <- function(lattes.list,
   ## Using ggplot2 (+ plotly if specified)
   if (type == "ggplot2" | type == "plotly"){
     myPlot <- ggplot2::ggplot(data    = myTotals2,
-                              mapping = ggplot2::aes(x     = Year,
-                                                     y     = Count,
-                                                     fill  = Type)) +
+                              mapping = ggplot2::aes(x    = myTotals2$Year,
+                                                     y    = myTotals2$Count,
+                                                     fill = myTotals2$Type)) +
       ggplot2::geom_bar(stat     = "identity",
                         position = "stack",
                         colour   = "#00000011") +
@@ -84,10 +83,10 @@ plot_chart <- function(lattes.list,
 
   if(type == "rCharts"){
     # Check if rCharts and RColorBrewer are installed
-    if(!("rCharts" %in% rownames(installed.packages()))){
+    if(!("rCharts" %in% rownames(utils::installed.packages()))){
       stop("Please install rCharts 0.4.5 using\n> devtools::install_github(repo = 'ramnathv/rCharts', ref = '479a4f9')")
     }
-    if(!("RColorBrewer" %in% rownames(installed.packages()))){
+    if(!("RColorBrewer" %in% rownames(utils::installed.packages()))){
       stop("Please install RColorBrewer using\n> install.packages('RColorBrewer')")
     }
 

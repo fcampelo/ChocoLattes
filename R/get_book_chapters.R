@@ -4,13 +4,13 @@
 #'
 #' This function extracts relevant information on published book chapters from a Lattes list.
 #'
-#' @param x Lattes list (generated internally in [Lattes_to_list()])
+#' @param x Lattes list (generated internally in [lattes_to_list()])
 #' @param ID a unique identifier for each CV being processed.
 #'
 #' @return data frame containing parsed information on published book chapters
 
 get_book_chapters <- function(x,
-                              ID = runif()){
+                              ID = stats::runif()){
   n.items <- length(x$`PRODUCAO-BIBLIOGRAFICA`$`LIVROS-E-CAPITULOS`$`CAPITULOS-DE-LIVROS-PUBLICADOS`)
   out.df  <- data.frame(Authors  = character(n.items),
                         Title    = character(n.items),

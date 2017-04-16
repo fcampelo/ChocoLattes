@@ -4,13 +4,13 @@
 #'
 #' This function extracts relevant information on advised PhD theses from a Lattes list.
 #'
-#' @param x Lattes list (generated internally in [Lattes_to_list()])
+#' @param x Lattes list (generated internally in [lattes_to_list()])
 #' @param ID a unique identifier for each CV being processed.
 #'
 #' @return data frame containing parsed information on advised PhD theses
 
 get_advised_theses <- function(x,
-                               ID = runif()){
+                               ID = stats::runif()){
   which.phd <- which(names(x$`OUTRA-PRODUCAO`$`ORIENTACOES-CONCLUIDAS`) == "ORIENTACOES-CONCLUIDAS-PARA-DOUTORADO")
   n.items   <- length(which.phd)
   out.df    <- data.frame(Author        = character(n.items),

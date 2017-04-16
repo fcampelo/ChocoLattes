@@ -4,10 +4,10 @@
 \alias{get_books}
 \title{Extract published books}
 \usage{
-get_books(x, ID = runif())
+get_books(x, ID = stats::runif())
 }
 \arguments{
-\item{x}{Lattes list (generated internally in \code{\link[=Lattes_to_list]{Lattes_to_list()}})}
+\item{x}{Lattes list (generated internally in \code{\link[=lattes_to_list]{lattes_to_list()}})}
 
 \item{ID}{a unique identifier for each CV being processed.}
 }

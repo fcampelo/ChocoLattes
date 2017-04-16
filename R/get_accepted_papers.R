@@ -4,13 +4,13 @@
 #'
 #' This function extracts relevant information on accepted journal papers from a Lattes list.
 #'
-#' @param x Lattes list (generated internally in [Lattes_to_list()])
+#' @param x Lattes list (generated internally in [lattes_to_list()])
 #' @param ID a unique identifier for each CV being processed.
 #'
 #' @return data frame containing parsed information on accepted journal papers
 
 get_accepted_papers <- function(x,
-                                ID = runif()){
+                                ID = stats::runif()){
   n.items <- length(x$`PRODUCAO-BIBLIOGRAFICA`$`ARTIGOS-ACEITOS-PARA-PUBLICACAO`)
   out.df  <- data.frame(Authors = character(n.items),
                         Title   = character(n.items),

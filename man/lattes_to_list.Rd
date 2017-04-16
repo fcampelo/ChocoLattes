@@ -11,7 +11,7 @@ lattes_to_list(filenames = NULL, CV.dir = NULL)
 processed. If NULL then use all XML files in the folder given by \code{CV.dir}}
 
 \item{CV.dir}{folder where CVs are contained, relative to current working
-directory (\strong{do not} use ".\" to refer the the current folder). If NULL
+directory (\strong{do not} use "./" to refer the the current folder). If NULL
 then the current working directory is used.}
 }
 \value{
