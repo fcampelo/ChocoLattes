@@ -5,17 +5,22 @@
 \title{Plot summary chart}
 \usage{
 plot_chart(lattes.list, chart.type = c("ggplot2", "plotly", "rCharts"),
-  width = 960, height = 480)
+  width = 960, height = 480, language = c("EN", "PT"))
 }
 \arguments{
 \item{lattes.list}{a Lattes list object created using \code{\link[=lattes_to_list]{lattes_to_list()}}}
 
 \item{chart.type}{package to use for generating the summary chart. "plotly" and
-"rCharts" output interactive charts, "ggplot2" outputs a static one.}
+"rCharts" output interactive charts, "ggplot2" outputs a static one. Option
+"rCharts" is currently disabled, until the rCharts package
+(\url{https://github.com/ramnathv/rCharts})
+becomes available on CRAN.}
 
 \item{width}{plot width (for "plotly" and "rCharts")}
 
 \item{height}{plot height (for "plotly")}
+
+\item{language}{Language to use in section headers}
 }
 \value{
 plot object for inclusion in a productions page

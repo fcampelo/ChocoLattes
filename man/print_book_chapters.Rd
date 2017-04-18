@@ -4,10 +4,12 @@
 \alias{print_book_chapters}
 \title{Print book chapters}
 \usage{
-print_book_chapters(x)
+print_book_chapters(x, language = c("EN", "PT"))
 }
 \arguments{
 \item{x}{data frame containing information on published book chapters}
+
+\item{language}{Language to use in section headers}
 }
 \description{
 Prints published book chapters

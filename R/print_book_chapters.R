@@ -3,12 +3,15 @@
 #' Prints published book chapters
 #'
 #' @param x data frame containing information on published book chapters
+#' @param language Language to use in section headers
 #'
 
-print_book_chapters <- function(x){
+print_book_chapters <- function(x,
+                                language = c("EN", "PT")){
   npap <- nrow(x)
   if(npap){
-    cat("### Cap\u00EDtulos de Livros\n")
+    if (language == "PT") cat("### Cap\u00EDtulos de Livros\n")
+    if (language == "EN") cat("### Book Chapters\n")
     for (i in 1:nrow(x)){
       cat(i, ". ",
           x$Authors[[i]],

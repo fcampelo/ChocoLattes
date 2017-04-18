@@ -7,7 +7,7 @@
 make_productions_page(lattes.list, chart.type = c("ggplot2", "plotly",
   "rCharts"), chart.width = 960, chart.height = 480,
   h1.title = "My Laboratory<br/>My Department<br/>My University",
-  h2.title = "Academic Productions")
+  h2.title = "Academic Productions", language = c("EN", "PT"))
 }
 \arguments{
 \item{lattes.list}{a Lattes list object created using \code{\link[=lattes_to_list]{lattes_to_list()}}}
@@ -22,8 +22,13 @@ make_productions_page(lattes.list, chart.type = c("ggplot2", "plotly",
 \item{h1.title}{H1 title for the page}
 
 \item{h2.title}{H2 subtitle for the page}
+
+\item{language}{Language to use in section headers}
 }
 \description{
 This function generates an HTML page with productions list and summary chart.
-Use chart.type = "plotly" or "rCharts" for interactive plots, and "ggplot2" for a static one.
+Use chart.type = "plotly" for an interactive plot, and "ggplot2"
+for a static one. Option "rCharts" is currently disabled, until the rCharts
+package (\url{https://github.com/ramnathv/rCharts})
+becomes available on CRAN.
 }

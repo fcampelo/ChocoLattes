@@ -4,10 +4,12 @@
 \alias{print_books}
 \title{Print books}
 \usage{
-print_books(x)
+print_books(x, language = c("EN", "PT"))
 }
 \arguments{
 \item{x}{data frame containing information on published books}
+
+\item{language}{Language to use in section headers}
 }
 \description{
 Prints published books

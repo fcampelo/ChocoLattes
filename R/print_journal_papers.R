@@ -3,12 +3,15 @@
 #' Prints published journal papers
 #'
 #' @param x data frame containing information on published papers
+#' @param language Language to use in section headers
 #'
 
-print_journal_papers <- function(x){
+print_journal_papers <- function(x,
+                                 language = c("EN", "PT")){
   npap <- nrow(x)
   if(npap){
-    cat("### Artigos em Peri\u00F3dicos\n")
+    if (language == "PT") cat("### Artigos em Peri\u00F3dicos\n")
+    if (language == "EN") cat("### Journal Papers\n")
     for (i in 1:nrow(x)){
       cat(i, ". ",
           x$Authors[[i]],

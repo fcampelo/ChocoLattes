@@ -4,10 +4,12 @@
 \alias{print_journal_papers}
 \title{Print journal papers}
 \usage{
-print_journal_papers(x)
+print_journal_papers(x, language = c("EN", "PT"))
 }
 \arguments{
 \item{x}{data frame containing information on published papers}
+
+\item{language}{Language to use in section headers}
 }
 \description{
 Prints published journal papers

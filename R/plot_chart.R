@@ -20,14 +20,16 @@
 #' becomes available on CRAN.
 #' @param width plot width (for "plotly" and "rCharts")
 #' @param height plot height (for "plotly")
+#' @param language Language to use in section headers
 #'
 #' @return plot object for inclusion in a productions page
 #' (see [make_productions_page()].
 
 plot_chart <- function(lattes.list,
                        chart.type = c("ggplot2","plotly","rCharts"),
-                       width  = 960,
-                       height = 480){
+                       width      = 960,
+                       height     = 480,
+                       language   = c("EN", "PT")){
 
   # Match argument
   type <- match.arg(chart.type, c("ggplot2","plotly","rCharts"))
@@ -64,6 +66,14 @@ plot_chart <- function(lattes.list,
 
   ## Using ggplot2 (+ plotly if specified)
   if (type == "ggplot2" | type == "plotly"){
+    if (language == "PT"){
+      my.xlab <- "Ano"
+      my.ylab <- "Quantidade"
+    }
+    if (language == "EN"){
+      my.xlab <- "Year"
+      my.ylab <- "Count"
+    }
     myPlot <- ggplot2::ggplot(data    = myTotals2,
                               mapping = ggplot2::aes(x    = myTotals2$Year,
                                                      y    = myTotals2$Count,
@@ -73,7 +83,9 @@ plot_chart <- function(lattes.list,
                         colour   = "#00000011") +
       ggplot2::scale_x_continuous(breaks = min(myTotals2$Year):max(myTotals2$Year)) +
       ggplot2::theme(axis.text.x     = ggplot2::element_text(angle = 45, vjust = 0),
-                     legend.position = "bottom")
+                     legend.position = "bottom") +
+      ggplot2::xlab(my.xlab) +
+      ggplot2::ylab(my.ylab)
 
 
     if (type == "plotly"){

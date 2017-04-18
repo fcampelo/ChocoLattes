@@ -4,13 +4,15 @@
 \alias{print_conferences}
 \title{Print conference papers}
 \usage{
-print_conferences(x, isIntl = TRUE)
+print_conferences(x, isIntl = TRUE, language = c("EN", "PT"))
 }
 \arguments{
 \item{x}{data frame containing information on published conference papers}
 
 \item{isIntl}{logical flag, TRUE for international conferences, FALSE for
 national/regional}
+
+\item{language}{Language to use in section headers}
 }
 \description{
 Prints published conference papers

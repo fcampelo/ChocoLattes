@@ -3,12 +3,15 @@
 #' Prints accepted papers
 #'
 #' @param x data frame containing information on accepted papers
+#' @param language Language to use in section headers
 #'
 
-print_accepted <- function(x){
+print_accepted <- function(x,
+                           language = c("EN", "PT")){
   npap <- nrow(x)
   if(npap){
-    cat("### Artigos Aceitos para Publica\u00E7\u00E3o\n")
+    if (language == "PT") cat("### Artigos Aceitos para Publica\u00E7\u00E3o\n")
+    if (language == "EN") cat("### Accepted Papers\n")
     for (i in 1:npap){
       cat(i, ". ",
           x$Authors[[i]], ": _",

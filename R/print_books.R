@@ -3,12 +3,15 @@
 #' Prints published books
 #'
 #' @param x data frame containing information on published books
+#' @param language Language to use in section headers
 #'
 
-print_books <- function(x){
+print_books <- function(x,
+                        language = c("EN", "PT")){
   npap <- nrow(x)
   if(npap){
-    cat("### Livros Publicados\n")
+    if (language == "PT") cat("### Livros Publicados\n")
+    if (language == "EN") cat("### Books\n")
     for (i in 1:nrow(x)){
       cat(i, ". ",
           x$Authors[[i]],
@@ -23,7 +26,7 @@ print_books <- function(x){
             sep = "")
       }
       if(x$Pages[i] != ""){
-        cat(x$Pages[i], " pages. ",
+        cat(x$Pages[i], " pgs. ",
             sep = "")
       }
       cat(x$Year, ". ",

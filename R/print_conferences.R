@@ -5,16 +5,27 @@
 #' @param x data frame containing information on published conference papers
 #' @param isIntl logical flag, TRUE for international conferences, FALSE for
 #' national/regional
+#' @param language Language to use in section headers
 #'
 
-print_conferences <- function(x, isIntl = TRUE){
+print_conferences <- function(x,
+                              isIntl   = TRUE,
+                              language = c("EN", "PT")){
   x <- x[which(x$Internac == isIntl), ]
   npap <- nrow(x)
   if(npap){
-    cat("### Artigos e Resumos em Confer\u00EAncias",
+    if (language == "PT"){
+      cat("### Artigos e Resumos em Confer\u00EAncias",
         ifelse(isIntl,
                "Internacionais\n",
                "Nacionais e Regionais\n"))
+    }
+    if (language == "EN"){
+      cat("### Works in Conference Proceedings ",
+          ifelse(isIntl,
+                 "(International)\n",
+                 "(National / Regional)\n"))
+    }
     for (i in 1:nrow(x)){
       cat(i, ". ",
           x$Authors[[i]],

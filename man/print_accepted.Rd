@@ -4,10 +4,12 @@
 \alias{print_accepted}
 \title{Print accepted papers}
 \usage{
-print_accepted(x)
+print_accepted(x, language = c("EN", "PT"))
 }
 \arguments{
 \item{x}{data frame containing information on accepted papers}
+
+\item{language}{Language to use in section headers}
 }
 \description{
 Prints accepted papers
