@@ -1,7 +1,10 @@
 #' Generate HTML page with productions list and summary chart
 #'
 #' This function generates an HTML page with productions list and summary chart.
-#' Use chart.type = "plotly" or "rCharts" for interactive plots, and "ggplot2" for a static one.
+#' Use chart.type = "plotly" for an interactive plot, and "ggplot2"
+#' for a static one. Option "rCharts" is currently disabled, until the rCharts
+#' package ([https://github.com/ramnathv/rCharts](https://github.com/ramnathv/rCharts))
+#' becomes available on CRAN.
 #'
 #' @param lattes.list a Lattes list object created using [lattes_to_list()]
 #' @param chart.type package to use for generating the summary chart. "plotly" and
