@@ -10,7 +10,7 @@ print_msc_theses <- function(x,
                              language = c("EN", "PT")){
   npap <- nrow(x)
   if(npap){
-    if (language == "PT") cat("### Dissertações de Mestrado\n")
+    if (language == "PT") cat("### Disserta\u00E7\u00F5es de Mestrado\n")
     if (language == "EN") cat("### MSc Dissertations\n")
     for (i in 1:nrow(x)){
       cat(i, ". ",
