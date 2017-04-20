@@ -37,5 +37,18 @@ Summarize production by a certain QUALIS extract
 }
 \section{Qualis File}{
 
+The qualis file must be a CSV file with commas as separators and UTF-8
+encoding. To ensure these properties, follow the steps:
+\itemize{
+\item Generate the relevant file from
+\url{https://sucupira.capes.gov.br/sucupira/public/consultas/coleta/veiculoPublicacaoQualis/listaConsultaGeralPeriodicos.jsf},
+selecting only the fields \emph{Evento de Classificacao} and \emph{Area de Avaliacao}
+(leave the others blank).
+\item Download the resulting \strong{xls} file.
+\item Open the file using your reader of choice, select all and copy
+\item Open a new spreadsheet on Google Docs, \url{https://docs.google.com/spreadsheets/u/0/}
+\item Paste everything into the Google Docs Spreadsheet
+\item Download the resulting file as a comma-separated file (\strong{File} -> \strong{Download as} -> \strong{Comma-separated values (.csv, current sheet)})
+}
 }
 
