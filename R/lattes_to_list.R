@@ -32,10 +32,10 @@ lattes_to_list <- function(filenames = NULL,
 
   CV.dir <- paste0(getwd(), "/", CV.dir)
   if (is.null(filenames)) {
-    filename <- dir(CV.dir, pattern = ".xml")
+    filenames <- dir(CV.dir, pattern = ".xml")
   }
 
-  myLattes <- paste0(CV.dir, "/", filename)
+  myLattes <- paste0(CV.dir, "/", filenames)
 
   # Prepare list for results
   out.list        <- vector("list", 7)

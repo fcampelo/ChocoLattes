@@ -5,7 +5,10 @@
 \title{Plot summary chart}
 \usage{
 plot_chart(lattes.list, chart.type = c("ggplot2", "plotly", "rCharts"),
-  width = 960, height = 480, language = c("EN", "PT"))
+  width = 960, height = 480, language = c("EN", "PT"),
+  which.fields = c("journal.accepted", "journal.published",
+  "conference.international", "conference.national", "book.chapters", "books",
+  "phd.theses", "msc.theses"))
 }
 \arguments{
 \item{lattes.list}{a Lattes list object created using \code{\link[=lattes_to_list]{lattes_to_list()}}}
@@ -21,6 +24,9 @@ becomes available on CRAN.}
 \item{height}{plot height (for "plotly")}
 
 \item{language}{Language to use in section headers}
+
+\item{which.fields}{Character vector indicating which fields to include in
+the productions page.}
 }
 \value{
 plot object for inclusion in a productions page

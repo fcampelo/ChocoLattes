@@ -21,23 +21,74 @@
 #' @param width plot width (for "plotly" and "rCharts")
 #' @param height plot height (for "plotly")
 #' @param language Language to use in section headers
+#' @param which.fields Character vector indicating which fields to include in
+#'                     the productions page.
 #'
 #' @return plot object for inclusion in a productions page
 #' (see [make_productions_page()].
 
 plot_chart <- function(lattes.list,
-                       chart.type = c("ggplot2","plotly","rCharts"),
-                       width      = 960,
-                       height     = 480,
-                       language   = c("EN", "PT")){
+                       chart.type   = c("ggplot2","plotly","rCharts"),
+                       width        = 960,
+                       height       = 480,
+                       language     = c("EN", "PT"),
+                       which.fields = c("journal.accepted",
+                                        "journal.published",
+                                        "conference.international",
+                                        "conference.national",
+                                        "book.chapters",
+                                        "books",
+                                        "phd.theses",
+                                        "msc.theses")){
 
   # Match argument
   type <- match.arg(chart.type, c("ggplot2","plotly","rCharts"))
+
+  # Check which.fields
+  which.fields <- unique(tolower(which.fields))
 
   # preprocess lattes.list
   lattes.list$`Conference Papers - International` <- lattes.list$`Conference Papers`[which(lattes.list$`Conference Papers`$Internac), ]
   lattes.list$`Conference Papers - National`      <- lattes.list$`Conference Papers`[which(!lattes.list$`Conference Papers`$Internac), ]
   lattes.list$`Conference Papers`                 <- NULL
+
+  # Select relevant fields
+  ll <- lattes.list
+  lattes.list <- vector(mode = "list", length = length(which.fields))
+  for (i in seq_along(which.fields)){
+    if (which.fields[i] == "books") {
+      lattes.list[[i]] <- ll$Books
+      names(lattes.list)[i] <- "Books"
+    }
+    if (which.fields[i] == "journal.accepted"){
+      lattes.list[[i]] <- ll$`Accepted for Publication`
+      names(lattes.list)[i] <- "Accepted for Publication"
+    }
+    if (which.fields[i] == "journal.published"){
+      lattes.list[[i]] <- ll$`Journal Papers`
+      names(lattes.list)[i] <- "Journal Papers"
+    }
+    if (which.fields[i] == "conference.international"){
+      lattes.list[[i]] <- ll$`Conference Papers - International`
+      names(lattes.list)[i] <- "Conference Papers - International"
+    }
+    if (which.fields[i] == "conference.national"){
+      lattes.list[[i]] <- ll$`Conference Papers - National`
+      names(lattes.list)[i] <- "Conference Papers - National"
+    }
+    if (which.fields[i] == "book.chapters"){
+      lattes.list[[i]] <- ll$`Book Chapters`
+      names(lattes.list)[i] <- "Book Chapters"
+    }
+    if (which.fields[i] == "phd.theses"){
+      lattes.list[[i]] <- ll$`PhD Theses`
+      names(lattes.list)[i] <- "PhD Theses"
+    }
+    if (which.fields[i] == "msc.theses"){
+      lattes.list[[i]] <- ll$`MSc Dissertations`
+      names(lattes.list)[i] <- "MSc Dissertations"
+    }
+  }
 
   # Assemble data frame with total counts per year
   myTotals              <- lapply(lattes.list,
@@ -69,11 +120,14 @@ plot_chart <- function(lattes.list,
     if (language == "PT"){
       my.xlab <- "Ano"
       my.ylab <- "Quantidade"
+      my.legtitle <- "Tipo"
     }
     if (language == "EN"){
       my.xlab <- "Year"
       my.ylab <- "Count"
+      my.legtitle <- "Type"
     }
+
     myPlot <- ggplot2::ggplot(data    = myTotals2,
                               mapping = ggplot2::aes(x    = myTotals2$Year,
                                                      y    = myTotals2$Count,
@@ -85,7 +139,8 @@ plot_chart <- function(lattes.list,
       ggplot2::theme(axis.text.x     = ggplot2::element_text(angle = 45, vjust = 0),
                      legend.position = "bottom") +
       ggplot2::xlab(my.xlab) +
-      ggplot2::ylab(my.ylab)
+      ggplot2::ylab(my.ylab) +
+      ggplot2::labs(fill = my.legtitle)
 
 
     if (type == "plotly"){

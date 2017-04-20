@@ -14,6 +14,8 @@
 #' @param h1.title H1 title for the page
 #' @param h2.title H2 subtitle for the page
 #' @param language Language to use in section headers
+#' @param which.fields Character vector indicating which fields to include in
+#'                     the productions page.
 #'
 #' @export
 
@@ -23,11 +25,22 @@ make_productions_page <- function(lattes.list,
                                   chart.height = 480,
                                   h1.title     = "My Laboratory<br/>My Department<br/>My University",
                                   h2.title     = "Academic Productions",
-                                  language     = c("EN", "PT")){
+                                  language     = c("EN", "PT"),
+                                  which.fields = c("journal.accepted",
+                                                   "journal.published",
+                                                   "conference.international",
+                                                   "conference.national",
+                                                   "book.chapters",
+                                                   "books",
+                                                   "phd.theses",
+                                                   "msc.theses")){
 
   # Match arguments
   chart.type <- match.arg(chart.type, c("ggplot2", "plotly", "rCharts"))
   language   <- match.arg(language, c("EN", "PT"))
+
+  # Check which.fields
+  which.fields <- unique(tolower(which.fields))
 
   # Save lattes.list as temporary file
   saveRDS(object = lattes.list, file = "./lattes_list.tmp")
@@ -45,6 +58,7 @@ make_productions_page <- function(lattes.list,
   writeLines("lattes.list <- readRDS('./lattes_list.tmp')", con = md.file)
   writeLines("Prod.Years <- lapply(lattes.list, FUN = function(x){unique(x$Year)})", con = md.file)
   writeLines("years <- sort(unique(unlist(Prod.Years)), decreasing = TRUE)", con = md.file)
+  writeLines(paste0("language <- '", language, "'"), con = md.file)
   writeLines("```", con = md.file)
 
   writeLines("```{r, results='asis', echo=FALSE, comment=NA, tidy=FALSE, fig.align='center', fig.width=9}", con = md.file)
@@ -55,18 +69,26 @@ make_productions_page <- function(lattes.list,
   writeLines(paste0("plot_chart(lattes.list, chart.type = '", chart.type,
                     "', width = ", chart.width,
                     ", height = ", chart.height,
-                    ", language = ", language, ")"), con = md.file)
+                    ", language = language",
+                    ", which.fields = c('",
+                    paste(which.fields, collapse = "','"), "'))"),
+             con = md.file)
   writeLines("cat(\"</p>\")", con = md.file)
 
   writeLines("for (year in years){", con = md.file)
   writeLines("tmplist <- lapply(lattes.list, function(x,year){x[x$Year == year, ]}, year = year)", con = md.file)
   writeLines("cat('<a name=\"', year, '\"></a>\\n\\n', '## ', year, '\\n', sep = \"\")", con = md.file)
-  writeLines("print_books(tmplist$Books, language = language)", con = md.file)
-  writeLines("print_accepted(tmplist$`Accepted for Publication`, language = language)", con = md.file)
-  writeLines("print_journal_papers(tmplist$`Journal Papers`, language = language)", con = md.file)
-  writeLines("print_conferences(tmplist$`Conference Papers`, isIntl = TRUE, language = language)", con = md.file)
-  writeLines("print_conferences(tmplist$`Conference Papers`, isIntl = FALSE, language = language)", con = md.file)
-  writeLines("print_book_chapters(tmplist$`Book Chapters`, language = language)", con = md.file)
+  for (field in which.fields){
+    if (field == "books") writeLines("print_books(tmplist$Books, language = language)", con = md.file)
+    if (field == "journal.accepted") writeLines("print_accepted(tmplist$`Accepted for Publication`, language = language)", con = md.file)
+    if (field == "journal.published") writeLines("print_journal_papers(tmplist$`Journal Papers`, language = language)", con = md.file)
+    if (field == "conference.international") writeLines("print_conferences(tmplist$`Conference Papers`, isIntl = TRUE, language = language)", con = md.file)
+    if (field == "conference.national") writeLines("print_conferences(tmplist$`Conference Papers`, isIntl = FALSE, language = language)", con = md.file)
+    if (field == "book.chapters") writeLines("print_book_chapters(tmplist$`Book Chapters`, language = language)", con = md.file)
+    if (field == "phd.theses") writeLines("print_phd_theses(tmplist$`PhD Theses`, language = language)", con = md.file)
+    if (field == "msc.theses") writeLines("print_msc_theses(tmplist$`MSc Dissertations`, language = language)", con = md.file)
+  }
+
   writeLines("cat('<p align=\"right\">[Back to top](#pagetop)</p>')\n}\n```\n\n", con = md.file)
 
   writeLines("<div style=\"background-color:#eeeeee; width:600px\">", con = md.file)
