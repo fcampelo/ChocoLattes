@@ -26,6 +26,8 @@
 #'
 #' @return plot object for inclusion in a productions page
 #' (see [make_productions_page()].
+#'
+#' @export
 
 plot_chart <- function(lattes.list,
                        chart.type   = c("ggplot2","plotly","rCharts"),
