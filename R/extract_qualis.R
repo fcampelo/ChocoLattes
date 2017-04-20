@@ -51,7 +51,7 @@ extract_qualis <- function(lattes.list, years, qualis.file,
                       FUN = function(x, year){x[x$Year == year, ]},
                       year = year)
     titles   <- tmplist$`Journal Papers`$Title
-    authors  <- tmplist$`Journal Papers`$Authors
+    authors  <- unlist(tmplist$`Journal Papers`$Authors)
     journals <- toupper(tmplist$`Journal Papers`$Journal)
 
     if(isComputerScience){
@@ -60,21 +60,21 @@ extract_qualis <- function(lattes.list, years, qualis.file,
       journals <- c(journals, toupper(tmplist$`Conference Papers`$Conference))
     }
 
-    myqualis <- data.frame(authors    = authors,
-                           title      = titles,
-                           journal    = journals,
+    myqualis <- data.frame(Authors    = authors,
+                           Title      = titles,
+                           Journal    = journals,
                            QUALIS     = character(length(journals)),
                            stringsAsFactors = FALSE)
 
     for (i in 1:length(journals)){
-      jname <- myqualis$journal[i]
+      jname <- myqualis$Journal[i]
       indx  <- which(jname == qualis[, 2])[1]
       if (length(indx) > 0){
         myqualis$QUALIS[i] <- qualis$Estrato[indx]
       } else myqualis$QUALIS[i] <- "N/A"
     }
 
-    myqualis <- myqualis[order(myqualis$journal), ]
+    myqualis <- myqualis[order(myqualis$Journal), ]
 
     # output file
     if (output.file == "xlsx"){
