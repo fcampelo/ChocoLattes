@@ -1,7 +1,7 @@
 Package: ChocoLattes
 Type: Package
-Title: ChocoLattes: Processing Data from Lattes CV Files
-Date: 2017-4-15
+Title: Processing Data from Lattes CV Files
+Date: 2017-4-21
 Version: 0.1.0
 Imports: 
     XML, 
@@ -25,4 +25,3 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-VignetteBuilder: knitr
