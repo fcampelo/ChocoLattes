@@ -38,3 +38,20 @@ for a static one. Option "rCharts" is currently disabled, until the rCharts
 package (\url{https://github.com/ramnathv/rCharts})
 becomes available on CRAN.
 }
+\examples{
+\dontrun{
+# 1. Download Download example file (_curriculo.xml_) from
+# [here](https://goo.gl/wu8HM3), and save it to your current
+# working folder.
+
+# 2. Convert it to a Lattes list using:
+lattes.list <- lattes_to_list(filenames = "curriculo.xml")
+
+# 3. Build productions page:
+make_productions_page(lattes.list = lattes.list,
+                      chart.type  = "plotly",
+                      h1.title    = "Felipe Campelo",
+                      h2.title    = "UFMG, Brazil",
+                      language    = "EN")
+}
+}

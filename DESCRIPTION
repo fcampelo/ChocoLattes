@@ -16,9 +16,10 @@ Imports:
 Depends: R (>= 3.3.1)
 Author: Felipe Campelo
 Maintainer: Felipe Campelo <fcampelo@ufmg.br>
-Description: R package for processing data from Lattes CV XML files. Extract, 
-    process and plot lists of journal and conference papers, book chapters, 
-    books, and more.
+Description: R package for processing data from Lattes CV 
+    (<http://lattes.cnpq.br/>) XML files. Extract, process and plot 
+    lists of journal and conference papers, book chapters, books, 
+    and more.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
