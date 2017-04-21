@@ -30,10 +30,12 @@ QUALIS ranks)}
 \item{plot.width, plot.height, plot.units, plot.res, plot.text.size}{graphical parameters}
 }
 \value{
-nothing. Generates one .xlsx file for each
+This routine returns nothing.
+It generates one \strong{.xlsx} or \strong{csv} file for each year in \code{years},
+as well as a summary plot (as a png file), if \code{plotQualis = TRUE}
 }
 \description{
-Summarize production by a certain QUALIS extract
+Summarize production as classified by a given QUALIS extract
 }
 \section{Qualis File}{
 

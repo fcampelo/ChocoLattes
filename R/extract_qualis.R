@@ -1,6 +1,6 @@
 #' Extract QUALIS information
 #'
-#' Summarize production by a certain QUALIS extract
+#' Summarize production as classified by a given QUALIS extract
 #'
 #' @param lattes.list a Lattes list object created using [lattes_to_list()]
 #' @param years integer vector with years to be extracted from lattes.list
@@ -27,7 +27,9 @@
 #' - Paste everything into the Google Docs Spreadsheet
 #' - Download the resulting file as a comma-separated file (**File** -> **Download as** -> **Comma-separated values (.csv, current sheet)**)
 #'
-#' @return nothing. Generates one .xlsx file for each
+#' @return This routine returns nothing.
+#' It generates one **.xlsx** or **csv** file for each year in `years`,
+#' as well as a summary plot (as a png file), if `plotQualis = TRUE`
 #' @export
 
 extract_qualis <- function(lattes.list, years, qualis.file,
