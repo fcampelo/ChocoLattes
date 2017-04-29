@@ -1,5 +1,7 @@
 ## ChocoLattes package
-[![Build Status](https://api.travis-ci.org/fcampelo/ChocoLattes.png)](https://travis-ci.org/fcampelo/ChocoLattes) 
+[![Build Status](https://api.travis-ci.org/fcampelo/ChocoLattes.png)](https://travis-ci.org/fcampelo/ChocoLattes)[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/ChocoLattes)](https://CRAN.R-project.org/package=ChocoLattes)
+[![CRAN Downloads](https://cranlogs.r-pkg.org/badges/ChocoLattes)](https://CRAN.R-project.org/package=ChocoLattes)
+
 
 [Felipe Campelo](mailto:fcampelo@ufmg.br)  
 Operations Research and Complex Systems Laboratory - ORCS Lab
@@ -26,23 +28,24 @@ Example:
 
 ```
 library(ChocoLattes) # <-- assuming it is installed, of course
-lattes.list <- lattes_to_list(filenames = "curriculo.xml")
+lattes.list <- lattes_to_list(CV.dir = getwd())
 ```
 
 3. Build a productions chart
 
 ```
 a <- plot_chart(lattes.list = lattes.list, 
-                chart.type  = "ggplot2")
+                chart.type  = "ggplot2", 
+                language = "PT")
 print(a)
 ```
 
 or a full productions page:
 
 ```
-make_productions_page(lattes.list = lattes.list, 
-                      chart.type  = "plotly", 
-                      h1.title    = "Felipe Campelo", 
+make_productions_page(lattes.list = lattes.list,
+                      chart.type  = "ggplot2",
+                      h1.title    = "ORCS Lab",
                       h2.title    = "UFMG, Brazil",
                       language    = "EN")
 ```
