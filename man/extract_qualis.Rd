@@ -32,7 +32,7 @@ QUALIS ranks)}
 \value{
 This routine returns nothing.
 It generates one \strong{.xlsx} or \strong{csv} file for each year in \code{years},
-as well as a summary plot (as a png file), if \code{plotQualis = TRUE}
+as well as a summary plot per year (as a png file), if \code{plotQualis = TRUE}
 }
 \description{
 Summarize production as classified by a given QUALIS extract

@@ -4,7 +4,7 @@
 \alias{get_books}
 \title{Extract published books}
 \usage{
-get_books(x, ID = stats::runif())
+get_books(x, ID = stats::runif(1))
 }
 \arguments{
 \item{x}{Lattes list (generated internally in \code{\link[=lattes_to_list]{lattes_to_list()}})}

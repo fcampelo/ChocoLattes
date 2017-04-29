@@ -10,7 +10,7 @@
 #' @return data frame containing parsed information on published books
 
 get_books <- function(x,
-                      ID = stats::runif()){
+                      ID = stats::runif(1)){
   n.items <- length(x$`PRODUCAO-BIBLIOGRAFICA`$`LIVROS-E-CAPITULOS`$`LIVROS-PUBLICADOS-OU-ORGANIZADOS`)
   out.df  <- data.frame(Authors   = character(n.items),
                         Bookname  = character(n.items),
@@ -25,7 +25,7 @@ get_books <- function(x,
     for (i in 1:n.items){
       item <- lapply(x$`PRODUCAO-BIBLIOGRAFICA`$`LIVROS-E-CAPITULOS`$`LIVROS-PUBLICADOS-OU-ORGANIZADOS`[[i]],
                      as.list)
-      out.df$Bookname[i]  <- tools::toTitleCase(tolower(item$`DADOS-BASICOS-DO-LIVRO`$`TITULO-DO-LIVRO`))
+      out.df$Bookname[i]  <- item$`DADOS-BASICOS-DO-LIVRO`$`TITULO-DO-LIVRO`
       out.df$Publisher[i] <- item$`DETALHAMENTO-DO-LIVRO`$`NOME-DA-EDITORA`
       out.df$Edition[i]   <- item$`DETALHAMENTO-DO-LIVRO`$`NUMERO-DA-EDICAO-REVISAO`
       out.df$City[i]      <- paste0(item$`DETALHAMENTO-DO-LIVRO`$`CIDADE-DA-EDITORA`,

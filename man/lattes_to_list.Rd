@@ -4,15 +4,14 @@
 \alias{lattes_to_list}
 \title{Convert a set of Lattes CV XML files to a list object}
 \usage{
-lattes_to_list(filenames = NULL, CV.dir = NULL)
+lattes_to_list(CV.dir = NULL, author.aliases = list())
 }
 \arguments{
-\item{filenames}{character vector containing name of the file(s) to be
-processed. If NULL then use all XML files in the folder given by \code{CV.dir}}
-
-\item{CV.dir}{folder where CVs are contained, relative to current working
-directory (\strong{do not} use "./" to refer the the current folder). If NULL
+\item{CV.dir}{folder where CVs are contained. If NULL
 then the current working directory is used.}
+
+\item{author.aliases}{list vector with author aliases.
+See \code{Examples} for details.}
 }
 \value{
 list vector where each element is a dataframe with information on a
@@ -38,4 +37,21 @@ aspects of a group's production:
 
 Journal and conference papers are checked for duplication using DOI and Title
 information. Duplicated entries are registered only once.
+}
+\examples{
+my.dir <- system.file("extdata", package="ChocoLattes")
+
+# Define the aliases of authors "Felipe Campelo" and "Lucas S. Batista":
+# (all aliases will be converted to the first name provided for each author)
+my.aliases <- list(c("Felipe Campelo",
+                     "Felipe Campelo Franca Pinto",
+                     "Felipe Campelo F. Pinto",
+                     "F.C.F. Pinto"),
+                   c("Lucas S. Batista",
+                     "Lucas Batista",
+                     "Lucas de Souza Batista",
+                     "Lucas Souza Batista"))
+
+lattes.list <- lattes_to_list(CV.dir         = my.dir,
+                              author.aliases = my.aliases)
 }

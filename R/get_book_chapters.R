@@ -10,7 +10,7 @@
 #' @return data frame containing parsed information on published book chapters
 
 get_book_chapters <- function(x,
-                              ID = stats::runif()){
+                              ID = stats::runif(1)){
   n.items <- length(x$`PRODUCAO-BIBLIOGRAFICA`$`LIVROS-E-CAPITULOS`$`CAPITULOS-DE-LIVROS-PUBLICADOS`)
   out.df  <- data.frame(Authors  = character(n.items),
                         Title    = character(n.items),
@@ -24,8 +24,8 @@ get_book_chapters <- function(x,
     for (i in 1:n.items){
       item <- lapply(x$`PRODUCAO-BIBLIOGRAFICA`$`LIVROS-E-CAPITULOS`$`CAPITULOS-DE-LIVROS-PUBLICADOS`[[i]],
                      as.list)
-      out.df$Title[i]    <- tools::toTitleCase(tolower(item$`DADOS-BASICOS-DO-CAPITULO`$`TITULO-DO-CAPITULO-DO-LIVRO`))
-      out.df$Bookname[i] <- tools::toTitleCase(tolower(item$`DETALHAMENTO-DO-CAPITULO`$`TITULO-DO-LIVRO`))
+      out.df$Title[i]    <- item$`DADOS-BASICOS-DO-CAPITULO`$`TITULO-DO-CAPITULO-DO-LIVRO`
+      out.df$Bookname[i] <- item$`DETALHAMENTO-DO-CAPITULO`$`TITULO-DO-LIVRO`
       out.df$Volume[i]   <- item$`DETALHAMENTO-DO-CAPITULO`$`NUMERO-DE-VOLUMES`
       out.df$Year[i]     <- item$`DADOS-BASICOS-DO-CAPITULO`$ANO
       out.df$Pages[i]    <- paste0(item$`DETALHAMENTO-DO-CAPITULO`$`PAGINA-INICIAL`,

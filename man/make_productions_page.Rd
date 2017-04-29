@@ -39,19 +39,30 @@ package (\url{https://github.com/ramnathv/rCharts})
 becomes available on CRAN.
 }
 \examples{
-\dontrun{
-# 1. Download Download example file (_curriculo.xml_) from
-# [here](https://goo.gl/wu8HM3), and save it to your current
-# working folder.
 
-# 2. Convert it to a Lattes list using:
-lattes.list <- lattes_to_list(filenames = "curriculo.xml")
+# Load example data and convert it to a lattes list
+CV.dir <- system.file("extdata", package="ChocoLattes")
 
-# 3. Build productions page:
-make_productions_page(lattes.list = lattes.list,
-                      chart.type  = "plotly",
-                      h1.title    = "Felipe Campelo",
-                      h2.title    = "UFMG, Brazil",
-                      language    = "EN")
-}
+# Define the aliases of authors "Felipe Campelo" and "Lucas S. Batista":
+# (all aliases will be converted to the first name provided for each author)
+my.aliases <- list(c("Felipe Campelo",
+                     "Felipe Campelo Franca Pinto",
+                     "Felipe Campelo F. Pinto",
+                     "F.C.F. Pinto"),
+                   c("Lucas S. Batista",
+                     "Lucas Batista",
+                     "Lucas de Souza Batista",
+                     "Lucas Souza Batista"))
+
+lattes.list <- lattes_to_list(CV.dir         = CV.dir,
+                              author.aliases = my.aliases)
+
+
+# Build productions page:
+make_productions_page(lattes.list,
+                      chart.type     = "ggplot2",
+                      h1.title       = "ORCS Lab",
+                      h2.title       = "UFMG, Brazil",
+                      language       = "EN")
+
 }

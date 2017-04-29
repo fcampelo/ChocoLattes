@@ -4,7 +4,7 @@
 \alias{get_journal_papers}
 \title{Extract published journal papers}
 \usage{
-get_journal_papers(x, ID = stats::runif())
+get_journal_papers(x, ID = stats::runif(1))
 }
 \arguments{
 \item{x}{Lattes list (generated internally in \code{\link[=lattes_to_list]{lattes_to_list()}})}

@@ -10,7 +10,7 @@
 #' @return data frame containing parsed information on conference papers
 
 get_conference_papers <- function(x,
-                                  ID = stats::runif()){
+                                  ID = stats::runif(1)){
   n.items <- length(x$`PRODUCAO-BIBLIOGRAFICA`$`TRABALHOS-EM-EVENTOS`)
   out.df  <- data.frame(Authors    = character(n.items),
                         Title      = character(n.items),
@@ -26,7 +26,7 @@ get_conference_papers <- function(x,
       item <- lapply(x$`PRODUCAO-BIBLIOGRAFICA`$`TRABALHOS-EM-EVENTOS`[[i]],
                      as.list)
 
-      out.df$Title[i]      <- tools::toTitleCase(tolower(item$`DADOS-BASICOS-DO-TRABALHO`$`TITULO-DO-TRABALHO`))
+      out.df$Title[i]      <- item$`DADOS-BASICOS-DO-TRABALHO`$`TITULO-DO-TRABALHO`
       out.df$Conference[i] <- item$`DETALHAMENTO-DO-TRABALHO`$`NOME-DO-EVENTO`
       out.df$Country[i]    <- item$`DADOS-BASICOS-DO-TRABALHO`$`PAIS-DO-EVENTO`
       out.df$Year[i]       <- max(item$`DETALHAMENTO-DO-TRABALHO`$`ANO-DE-REALIZACAO`,

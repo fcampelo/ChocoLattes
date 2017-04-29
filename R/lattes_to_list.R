@@ -16,26 +16,45 @@
 #'
 #' Journal and conference papers are checked for duplication using DOI and Title
 #' information. Duplicated entries are registered only once.
-#' @param filenames character vector containing name of the file(s) to be
-#' processed. If NULL then use all XML files in the folder given by `CV.dir`
-#' @param CV.dir folder where CVs are contained, relative to current working
-#' directory (**do not** use "./" to refer the the current folder). If NULL
+#' @param CV.dir folder where CVs are contained. If NULL
 #' then the current working directory is used.
+#' @param author.aliases list vector with author aliases.
+#' See \code{Examples} for details.
 #'
 #' @return list vector where each element is a dataframe with information on a
 #' specific aspect of the academic production
 #'
 #' @export
+#'
+#' @examples
+#' my.dir <- system.file("extdata", package="ChocoLattes")
+#'
+#' # Define the aliases of authors "Felipe Campelo" and "Lucas S. Batista":
+#' # (all aliases will be converted to the first name provided for each author)
+#' my.aliases <- list(c("Felipe Campelo",
+#'                      "Felipe Campelo Franca Pinto",
+#'                      "Felipe Campelo F. Pinto",
+#'                      "F.C.F. Pinto"),
+#'                    c("Lucas S. Batista",
+#'                      "Lucas Batista",
+#'                      "Lucas de Souza Batista",
+#'                      "Lucas Souza Batista"))
+#'
+#' lattes.list <- lattes_to_list(CV.dir         = my.dir,
+#'                               author.aliases = my.aliases)
 
-lattes_to_list <- function(filenames = NULL,
-                           CV.dir    = NULL){
+lattes_to_list <- function(CV.dir    = NULL,
+                           author.aliases = list()){
 
-  CV.dir <- paste0(getwd(), "/", CV.dir)
-  if (is.null(filenames)) {
-    filenames <- dir(CV.dir, pattern = ".xml")
+  # Standardize CV.dir
+  if(!R.utils::isAbsolutePath(CV.dir)){
+    CV.dir <- paste0(getwd(), "/",
+                     gsub(pattern = "[.]/", "", CV.dir))
   }
 
-  myLattes <- paste0(CV.dir, "/", filenames)
+  # get filenames
+  filenames <- paste0(CV.dir, "/", dir(CV.dir, pattern = ".xml"))
+  filenames <- gsub("//", "/", filenames)
 
   # Prepare list for results
   out.list        <- vector("list", 7)
@@ -47,9 +66,9 @@ lattes_to_list <- function(filenames = NULL,
                        "MSc Dissertations",
                        "PhD Theses")
 
-  for (indx in seq_along(myLattes)){
+  for (indx in seq_along(filenames)){
     # Read XML to a list object
-    x <- XML::xmlToList(XML::xmlTreeParse(myLattes[indx],
+    x <- XML::xmlToList(XML::xmlTreeParse(filenames[indx],
                                           useInternal = TRUE,
                                           encoding    = "latin"))
 
@@ -87,7 +106,10 @@ lattes_to_list <- function(filenames = NULL,
   out.list <- lapply(out.list, FUN = sort_papers)
 
   # Get good capitalization of authornames
-  out.list <- lapply(out.list, FUN = capitalize_authors)
+  out.list <- lapply(out.list, FUN = capitalize_authors, author.aliases = author.aliases)
+
+  # Get good capitalization of Titles
+  out.list <- lapply(out.list, FUN = capitalize_titles)
 
   # Remove duplicated works (by DOI, ISSN or Title)
   out.list <- lapply(out.list, FUN = remove_duplicates)

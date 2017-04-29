@@ -29,7 +29,7 @@
 #'
 #' @return This routine returns nothing.
 #' It generates one **.xlsx** or **csv** file for each year in `years`,
-#' as well as a summary plot (as a png file), if `plotQualis = TRUE`
+#' as well as a summary plot per year (as a png file), if `plotQualis = TRUE`
 #' @export
 
 extract_qualis <- function(lattes.list, years, qualis.file,
@@ -99,10 +99,10 @@ extract_qualis <- function(lattes.list, years, qualis.file,
                                                 y     = dfTab$Freq,
                                                 label = dfTab$Freq))
 
-      grDevices::png(file = paste0("Qualis distribution in year", year, ".png"),
+      grDevices::png(file = paste0("./Qualis distribution in year", year, ".png"),
                      width = plot.width, height = plot.height,
                      units = plot.units, res = plot.res)
-      mp + ggplot2::geom_bar(stat = "identity") +
+      mp <- mp + ggplot2::geom_bar(stat = "identity") +
         ggplot2::xlab(paste0("Qualis (", qualis.extract, ")")) +
         ggplot2::ylab("Count") +
         ggplot2::theme(axis.title  = ggplot2::element_text(size = plot.text.size),
@@ -110,6 +110,7 @@ extract_qualis <- function(lattes.list, years, qualis.file,
                        legend.text = ggplot2::element_text(size = plot.text.size)) +
         ggplot2::geom_text(vjust = 0, nudge_y = 0.5, size = plot.text.size * 0.7) +
         ggplot2::ylim(0, max(dfTab$Freq + 2))
+      print(mp)
       grDevices::dev.off()
     }
   }

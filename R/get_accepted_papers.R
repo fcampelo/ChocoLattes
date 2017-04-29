@@ -10,7 +10,7 @@
 #' @return data frame containing parsed information on accepted journal papers
 
 get_accepted_papers <- function(x,
-                                ID = stats::runif()){
+                                ID = stats::runif(1)){
   n.items <- length(x$`PRODUCAO-BIBLIOGRAFICA`$`ARTIGOS-ACEITOS-PARA-PUBLICACAO`)
   out.df  <- data.frame(Authors = character(n.items),
                         Title   = character(n.items),
@@ -22,7 +22,7 @@ get_accepted_papers <- function(x,
     for (i in 1:n.items){
       item <- lapply(x$`PRODUCAO-BIBLIOGRAFICA`$`ARTIGOS-ACEITOS-PARA-PUBLICACAO`[[i]],
                      as.list)
-      out.df$Title[i]   <- tools::toTitleCase(tolower(item$`DADOS-BASICOS-DO-ARTIGO`$`TITULO-DO-ARTIGO`))
+      out.df$Title[i]   <- item$`DADOS-BASICOS-DO-ARTIGO`$`TITULO-DO-ARTIGO`
       out.df$Journal[i] <- item$`DETALHAMENTO-DO-ARTIGO`$`TITULO-DO-PERIODICO-OU-REVISTA`
       out.df$DOI[i]     <- ifelse(item$`DADOS-BASICOS-DO-ARTIGO`$DOI == "" | item$`DADOS-BASICOS-DO-ARTIGO`$DOI == " ",
                                     paste0("zNotAvailable no.", ID, "-", i),

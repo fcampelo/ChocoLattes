@@ -4,12 +4,19 @@
 \alias{capitalize_authors}
 \title{Capitalize author names}
 \usage{
-capitalize_authors(x, make.lower = c("De", "Da", "Do", "E"))
+capitalize_authors(x, make.lower = c("De", "Di", "Do", "Da", "Dos", "Das",
+  "Dello", "Della", "Dalla", "Dal", "Del", "E", "Em", "Na", "No", "Nas", "Nos",
+  "Van", "Von", "Y"), author.aliases = NULL)
 }
 \arguments{
-\item{x}{data frame containing a column "Authors", author names (separated by commas, if multiple)}
+\item{x}{data frame containing a column "Authors" (or "Author"),
+which should describe author names (separated by commas, if multiple) for a given
+production type.}
 
 \item{make.lower}{character vector containing name conectors to keep in lowercase}
+
+\item{author.aliases}{list vector with author aliases.
+See \code{\link[=lattes_to_list]{lattes_to_list()}} for details.}
 }
 \value{
 data frame with (hopefully) correctly capitalized author names in column "Authors".

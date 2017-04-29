@@ -4,7 +4,7 @@
 \alias{get_advised_theses}
 \title{Extract advised PhD theses}
 \usage{
-get_advised_theses(x, ID = stats::runif())
+get_advised_theses(x, ID = stats::runif(1))
 }
 \arguments{
 \item{x}{Lattes list (generated internally in \code{\link[=lattes_to_list]{lattes_to_list()}})}

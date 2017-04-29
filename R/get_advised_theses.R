@@ -10,7 +10,7 @@
 #' @return data frame containing parsed information on advised PhD theses
 
 get_advised_theses <- function(x,
-                               ID = stats::runif()){
+                               ID = stats::runif(1)){
   which.phd <- which(names(x$`OUTRA-PRODUCAO`$`ORIENTACOES-CONCLUIDAS`) == "ORIENTACOES-CONCLUIDAS-PARA-DOUTORADO")
   n.items   <- length(which.phd)
   out.df    <- data.frame(Author        = character(n.items),
@@ -28,7 +28,7 @@ get_advised_theses <- function(x,
     for (i in 1:n.items){
       item <- lapply(x[[i]], as.list)
       out.df$Author[i]        <- item$`DETALHAMENTO-DE-ORIENTACOES-CONCLUIDAS-PARA-DOUTORADO`$`NOME-DO-ORIENTADO`
-      out.df$Title[i]         <- tools::toTitleCase(tolower(item$`DADOS-BASICOS-DE-ORIENTACOES-CONCLUIDAS-PARA-DOUTORADO`$TITULO))
+      out.df$Title[i]         <- item$`DADOS-BASICOS-DE-ORIENTACOES-CONCLUIDAS-PARA-DOUTORADO`$TITULO
       out.df$Year[i]          <- item$`DADOS-BASICOS-DE-ORIENTACOES-CONCLUIDAS-PARA-DOUTORADO`$ANO
       out.df$Language[i]      <- item$`DADOS-BASICOS-DE-ORIENTACOES-CONCLUIDAS-PARA-DOUTORADO`$IDIOMA
       out.df$IsMainAdvisor[i] <- (item$`DETALHAMENTO-DE-ORIENTACOES-CONCLUIDAS-PARA-DOUTORADO`$`TIPO-DE-ORIENTACAO` == "ORIENTADOR_PRINCIPAL")
