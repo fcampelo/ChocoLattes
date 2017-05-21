@@ -1,8 +1,8 @@
 Package: ChocoLattes
 Type: Package
 Title: Processing Data from Lattes CV Files
-Date: 2017-4-28
-Version: 0.1.0
+Date: 2017-5-21
+Version: 0.1.1
 Imports: 
     XML, 
     tools, 

@@ -1,9 +1,8 @@
 ## Changes and notes
-* Added (runnable) examples, as suggested by Uwe Ligges.  
-* Corrected DESCRIPTION, as requested by Uwe Ligges.  
+* Added test to verify availability of pandoc, as requested by Brian Ripley (to correct a Solaris error).  
 
 ## Test environments
-* local OS X install, R 3.3.1
+* local OS X install, R 3.4.0
 * ubuntu 12.04 (on travis-ci), R 3.3.1
 * win-builder (devel and release)
 

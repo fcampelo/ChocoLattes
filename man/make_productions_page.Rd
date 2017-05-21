@@ -59,10 +59,12 @@ lattes.list <- lattes_to_list(CV.dir         = CV.dir,
 
 
 # Build productions page:
-make_productions_page(lattes.list,
-                      chart.type     = "ggplot2",
-                      h1.title       = "ORCS Lab",
-                      h2.title       = "UFMG, Brazil",
-                      language       = "EN")
+if(rmarkdown::pandoc_available()) {
+  make_productions_page(lattes.list,
+                        chart.type     = "ggplot2",
+                        h1.title       = "ORCS Lab",
+                        h2.title       = "UFMG, Brazil",
+                        language       = "EN")
+}
 
 }
