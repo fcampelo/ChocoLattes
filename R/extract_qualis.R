@@ -27,9 +27,11 @@
 #' - Paste everything into the Google Docs Spreadsheet
 #' - Download the resulting file as a comma-separated file (**File** -> **Download as** -> **Comma-separated values (.csv, current sheet)**)
 #'
-#' @return This routine returns nothing.
-#' It generates one **.xlsx** or **.csv** file for each year in `years`,
+#' @return This routine returns (invisibly) a data frame containing the
+#' processed information. It also generates one **.xlsx** or **.csv**
+#' file for each year in `years`,
 #' as well as a summary plot per year (as a png file), if `plotQualis = TRUE`
+#'
 #' @export
 
 extract_qualis <- function(lattes.list, years, qualis.file,
@@ -116,4 +118,6 @@ extract_qualis <- function(lattes.list, years, qualis.file,
       grDevices::dev.off()
     }
   }
+
+  invisible(myqualis)
 }

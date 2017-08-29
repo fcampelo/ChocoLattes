@@ -30,8 +30,9 @@ QUALIS ranks)}
 \item{plot.width, plot.height, plot.units, plot.res, plot.text.size}{graphical parameters}
 }
 \value{
-This routine returns nothing.
-It generates one \strong{.xlsx} or \strong{.csv} file for each year in \code{years},
+This routine returns (invisibly) a data frame containing the
+processed information. It also generates one \strong{.xlsx} or \strong{.csv}
+file for each year in \code{years},
 as well as a summary plot per year (as a png file), if \code{plotQualis = TRUE}
 }
 \description{
