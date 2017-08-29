@@ -28,7 +28,7 @@
 #' - Download the resulting file as a comma-separated file (**File** -> **Download as** -> **Comma-separated values (.csv, current sheet)**)
 #'
 #' @return This routine returns nothing.
-#' It generates one **.xlsx** or **csv** file for each year in `years`,
+#' It generates one **.xlsx** or **.csv** file for each year in `years`,
 #' as well as a summary plot per year (as a png file), if `plotQualis = TRUE`
 #' @export
 
@@ -39,7 +39,8 @@ extract_qualis <- function(lattes.list, years, qualis.file,
                            qualis.extract = NULL,
                            plot.width = 16, plot.height = 8,
                            plot.units = "in", plot.res = 300,
-                           plot.text.size = 18){
+                           plot.text.size = 18,
+                           csv.sep = ","){
 
   # read qualis file
   qualis <- utils::read.csv(qualis.file,
@@ -89,7 +90,8 @@ extract_qualis <- function(lattes.list, years, qualis.file,
         utils::write.csv(myqualis,
                          file = paste0("Productions x Qualis for year ",
                                        year, ".csv"),
-                         quote = FALSE, row.names = FALSE)
+                         quote = FALSE, row.names = FALSE,
+                         sep = csv.sep)
       } else stop("output.file format not recognized. Please use 'csv' or 'xlsx'.")
 
     if (plotQualis){

@@ -7,7 +7,7 @@
 extract_qualis(lattes.list, years, qualis.file, isComputerScience = FALSE,
   output.file = c("csv", "xlsx"), plotQualis = TRUE,
   qualis.extract = NULL, plot.width = 16, plot.height = 8,
-  plot.units = "in", plot.res = 300, plot.text.size = 18)
+  plot.units = "in", plot.res = 300, plot.text.size = 18, csv.sep = ",")
 }
 \arguments{
 \item{lattes.list}{a Lattes list object created using \code{\link[=lattes_to_list]{lattes_to_list()}}}
@@ -31,7 +31,7 @@ QUALIS ranks)}
 }
 \value{
 This routine returns nothing.
-It generates one \strong{.xlsx} or \strong{csv} file for each year in \code{years},
+It generates one \strong{.xlsx} or \strong{.csv} file for each year in \code{years},
 as well as a summary plot per year (as a png file), if \code{plotQualis = TRUE}
 }
 \description{
