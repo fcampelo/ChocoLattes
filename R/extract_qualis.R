@@ -13,6 +13,8 @@
 #' @param plotQualis logical flag, should a plot be generated?
 #' @param qualis.extract name of the qualis extract used (optional, for the plot only)
 #' @param plot.width,plot.height,plot.units,plot.res,plot.text.size graphical parameters
+#' @param csv.sep optional field separator string for CSV. Passed down as
+#'        `write.csv(..., sep = csv.sep)`.
 #'
 #' @section Qualis File:
 #' The qualis file must be a CSV file with commas as separators and UTF-8

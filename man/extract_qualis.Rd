@@ -28,6 +28,9 @@ QUALIS ranks)}
 \item{qualis.extract}{name of the qualis extract used (optional, for the plot only)}
 
 \item{plot.width, plot.height, plot.units, plot.res, plot.text.size}{graphical parameters}
+
+\item{csv.sep}{optional field separator string for CSV. Passed down as
+\code{write.csv(..., sep = csv.sep)}.}
 }
 \value{
 This routine returns (invisibly) a data frame containing the
