@@ -30,7 +30,7 @@ print_book_chapters <- function(x,
       if(!is.null(x$DOI[i]) && !is.na(x$DOI[i]) && x$DOI[i] != ""){
         cat(".<br/>[[DOI: ",
             x$DOI[i],
-            "](http://dx.doi.org/",
+            "](https://doi.org/",
             x$DOI[i], ")]",
             sep = "")
       }
