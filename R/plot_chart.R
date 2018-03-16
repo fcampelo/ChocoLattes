@@ -154,29 +154,29 @@ plot_chart <- function(lattes.list,
   }
 
   if(type == "rCharts"){
-    stop("rCharts option currently disabled. Use chart.type = 'plotly' instead.")
+    # stop("rCharts option currently disabled. Use chart.type = 'plotly' instead.")
     #
     # --> Add rCharts and RColorBrewer as Imports in DESCRIPTION when available.
-    # # Check if rCharts and RColorBrewer are installed
-    # if(!("rCharts" %in% rownames(utils::installed.packages()))){
-    #   stop("Please install rCharts 0.4.5 using\n> devtools::install_github(repo = 'ramnathv/rCharts', ref = '479a4f9')")
-    # }
-    # if(!("RColorBrewer" %in% rownames(utils::installed.packages()))){
-    #   stop("Please install RColorBrewer using\n> install.packages('RColorBrewer')")
-    # }
-    #
-    # # Using rCharts
-    # TotalsPlot <- rCharts::nPlot(Count ~ Year,
-    #                              group = "Type",
-    #                              data  = myTotals2,
-    #                              type  = "multiBarChart")
-    # # Add decorations and customize style
-    # TotalsPlot$chart(color            = RColorBrewer::brewer.pal(8, "Set1"),
-    #                  reduceXTicks     = FALSE)
-    # TotalsPlot$xAxis(rotateLabels     = -45,
-    #                  staggerLabels    = FALSE)
-    # TotalsPlot$chart(multibar.stacked = TRUE)
-    # TotalsPlot$set(width = width)
-    # TotalsPlot$print('iframesrc', include_assets = TRUE)
+    # Check if rCharts and RColorBrewer are installed
+    if(!("rCharts" %in% rownames(utils::installed.packages()))){
+      stop("Please install rCharts 0.4.5 using\n> devtools::install_github(repo = 'ramnathv/rCharts', ref = '479a4f9')")
+    }
+    if(!("RColorBrewer" %in% rownames(utils::installed.packages()))){
+      stop("Please install RColorBrewer using\n> install.packages('RColorBrewer')")
+    }
+
+    # Using rCharts
+    TotalsPlot <- rCharts::nPlot(Count ~ Year,
+                                 group = "Type",
+                                 data  = myTotals2,
+                                 type  = "multiBarChart")
+    # Add decorations and customize style
+    TotalsPlot$chart(color            = RColorBrewer::brewer.pal(8, "Set1"),
+                     reduceXTicks     = FALSE)
+    TotalsPlot$xAxis(rotateLabels     = -45,
+                     staggerLabels    = FALSE)
+    TotalsPlot$chart(multibar.stacked = TRUE)
+    TotalsPlot$set(width = width)
+    TotalsPlot$print('iframesrc', include_assets = TRUE)
   }
 }
